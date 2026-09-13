@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tablero Interactivo de Enlaces de Internet - GUATEL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-dark: #0f172a;
+      --primary-light: #3b82f6;
+      --accent: #0284c7;
+      --accent-light: #38bdf8;
+      --bg-main: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-header: #0f172a;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --border-hover: #cbd5e1;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --radius-lg: 16px;
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="dark"] {
+      --primary: #3b82f6;
+      --primary-dark: #030712;
+      --primary-light: #60a5fa;
+      --accent: #38bdf8;
+      --accent-light: #7dd3fc;
+      --bg-main: #0b0f19;
+      --bg-card: #111827;
+      --bg-header: #030712;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --border-color: #1f2937;
+      --border-hover: #374151;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HEADER */
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #0369a1 100%);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-bottom: 3px solid #0284c7;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .header-container {
+      max-width: 1750px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand-logo {
+      width: 52px;
+      height: 52px;
+      background: white;
+      border-radius: 12px;
+      padding: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      font-weight: 800;
+      color: #1e3a8a;
+      font-size: 0.95rem;
+      line-height: 1;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-title h1 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .brand-title p {
+      font-size: 0.85rem;
+      color: #93c5fd;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.825rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: #0284c7;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #0369a1;
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* MAIN LAYOUT */
+    main {
+      max-width: 1750px;
+      width: 100%;
+      margin: 1.25rem auto;
+      padding: 0 1.25rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* KPI CARDS */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 1.15rem;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .kpi-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+      border-color: var(--primary-light);
+    }
+
+    .kpi-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--primary);
+    }
+    .kpi-card.kpi-blue::before { background: #0284c7; }
+    .kpi-card.kpi-emerald::before { background: #10b981; }
+    .kpi-card.kpi-amber::before { background: #f59e0b; }
+    .kpi-card.kpi-purple::before { background: #8b5cf6; }
+
+    .kpi-title {
+      font-size: 0.775rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .kpi-value {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.1;
+      display: flex;
+      align-items: baseline;
+      gap: 0.35rem;
+    }
+
+    .kpi-unit {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .kpi-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
+
+    /* CONTROL BAR */
+    .controls-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .control-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .select-input, .text-input {
+      background: var(--bg-main);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 0.85rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.825rem;
+      font-family: inherit;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .select-input:focus, .text-input:focus {
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+
+    .pill-group {
+      display: flex;
+      background: var(--bg-main);
+      padding: 3px;
+      border-radius: 9999px;
+      border: 1px solid var(--border-color);
+    }
+
+    .pill-btn {
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .pill-btn.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* MAP & ANALYTICS SPLIT */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 1200px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* MAP CARD */
+    .map-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .map-container {
+      position: relative;
+      width: 100%;
+      height: 560px;
+      background: var(--bg-main);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #svg-guatemala {
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+      user-select: none;
+      transition: transform 0.05s ease-out;
+    }
+
+    #svg-guatemala:active {
+      cursor: grabbing;
+    }
+
+    /* MAP PATHS */
+    .dept-path {
+      stroke: #ffffff;
+      stroke-width: 0.8;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      transition: fill 0.3s ease, stroke 0.2s ease, stroke-width 0.2s ease, filter 0.2s ease;
+      cursor: pointer;
+    }
+
+    [data-theme="dark"] .dept-path {
+      stroke: #1f2937;
+    }
+
+    .dept-path:hover {
+      stroke: #f59e0b;
+      stroke-width: 2.5;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
+    }
+
+    .dept-path.selected {
+      stroke: #ef4444;
+      stroke-width: 3.5;
+      filter: drop-shadow(0 0 14px rgba(239, 68, 68, 0.7));
+    }
+
+    /* BELIZE PATHS (NON-INTERACTIVE) */
+    .belice-path {
+      fill: #cbd5e1;
+      stroke: #94a3b8;
+      stroke-width: 0.75;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      pointer-events: none;
+      opacity: 0.75;
+    }
+
+    [data-theme="dark"] .belice-path {
+      fill: #1e293b;
+      stroke: #475569;
+    }
+
+    .belice-label {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      fill: #64748b;
+      pointer-events: none;
+      user-select: none;
+      paint-order: stroke;
+      stroke: #ffffff;
+      stroke-width: 2px;
+    }
+
+    [data-theme="dark"] .belice-label {
+      fill: #94a3b8;
+      stroke: #0f172a;
+    }
+
+    /* MAP TEXT LABELS */
+    .dept-text {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      pointer-events: none;
+      user-select: none;
+      fill: #0f172a;
+      paint-order: stroke;
+      stroke: #ffffff;
+      stroke-width: 2.5px;
+      stroke-linecap: butt;
+      stroke-linejoin: miter;
+      transition: opacity 0.2s ease;
+    }
+
+    [data-theme="dark"] .dept-text {
+      fill: #f8fafc;
+      stroke: #0f172a;
+      stroke-width: 3px;
+    }
+
+    /* MAP TOOLTIP */
+    .map-tooltip {
+      position: absolute;
+      display: none;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      color: white;
+      padding: 0.85rem 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      pointer-events: none;
+      z-index: 100;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      max-width: 300px;
+      line-height: 1.4;
+      transform: translate(-50%, -115%);
+      transition: opacity 0.15s ease;
+    }
+
+    .tooltip-header {
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: #38bdf8;
+      margin-bottom: 0.4rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 0.3rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .tooltip-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.25rem;
+      gap: 1rem;
+    }
+
+    .tooltip-row span:last-child {
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    /* MAP CONTROLS OVERLAY */
+    .map-tools {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      z-index: 10;
+    }
+
+    .map-tool-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: 700;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+    .map-tool-btn:hover {
+      background: var(--bg-main);
+      border-color: var(--primary-light);
+    }
+
+    .map-legend {
+      margin-top: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .legend-bar-container {
+      flex: 1;
+      margin: 0 1rem;
+      height: 10px;
+      border-radius: 9999px;
+      position: relative;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    /* RIGHT ANALYTICS CARD */
+    .sidebar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .dept-details-header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #0284c7 100%);
+      color: white;
+      padding: 1rem;
+      border-radius: var(--radius-sm);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dept-details-header h2 {
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+
+    .dept-stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .dept-stat-box {
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem;
+    }
+
+    .dept-stat-box .title {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .dept-stat-box .val {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-top: 0.15rem;
+    }
+
+    /* BARS LIST */
+    .muni-bars-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-height: 240px;
+      overflow-y: auto;
+      padding-right: 0.35rem;
+    }
+
+    .muni-bar-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .muni-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.775rem;
+      font-weight: 600;
+    }
+
+    .muni-bar-track {
+      width: 100%;
+      height: 7px;
+      background: var(--bg-main);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .muni-bar-fill {
+      height: 100%;
+      background: #0284c7;
+      border-radius: 9999px;
+      transition: width 0.4s ease;
+    }
+
+    /* MASTER TABLE */
+    .table-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .table-tools {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .table-wrapper {
+      width: 100%;
+      max-height: 480px;
+      overflow-y: auto;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.825rem;
+    }
+
+    thead {
+      background: var(--bg-main);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    th {
+      padding: 0.75rem 1rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    th:hover {
+      color: var(--text-main);
+    }
+
+    td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    tbody tr:hover {
+      background: var(--bg-main);
+    }
+
+    .tag {
+      padding: 0.2rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      display: inline-block;
+    }
+
+    .tag-con {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .tag-sin {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    [data-theme="dark"] .tag-con {
+      background: #064e3b;
+      color: #6ee7b7;
+    }
+    [data-theme="dark"] .tag-sin {
+      background: #78350f;
+      color: #fde68a;
+    }
+
+    /* FOOTER */
+    footer {
+      margin-top: auto;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border-color);
+      padding: 1.25rem 1.5rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-container">
+      <div class="brand-section">
+        <div class="brand-logo">
+          <span>GT</span>
+          <span style="font-size:0.6rem; font-weight:700; color:#0284c7;">GUATEL</span>
+        </div>
+        <div class="brand-title">
+          <h1>Tablero de Enlaces de Internet · Mayo 2025</h1>
+          <p>EMPRESA GUATEMALTECA DE TELECOMUNICACIONES GUATEL -GUATEL-.</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span class="badge">🇬🇹 22 Departamentos</span>
+        <span class="badge">🏛️ 47 Municipios</span>
+        <span class="badge">⚡ 6,635 Mbps</span>
+        <button class="btn btn-outline" onclick="toggleTheme()" id="theme-toggle-btn">🌙 Modo Oscuro</button>
+        <button class="btn btn-primary" onclick="exportDataToCSV()">📥 Descargar Excel / CSV</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN DASHBOARD -->
+  <main>
+
+    <!-- KPI ROW -->
+    <section class="kpi-grid">
+      <div class="kpi-card kpi-blue">
+        <div class="kpi-title">Capacidad Total Contratada</div>
+        <div class="kpi-value" id="kpi-total-cap">6,635 <span class="kpi-unit">Mbps</span></div>
+        <div class="kpi-subtitle" id="kpi-sub-cap">100% Cobertura Nacional</div>
+      </div>
+      <div class="kpi-card kpi-emerald">
+        <div class="kpi-title">Total de Enlaces Activos</div>
+        <div class="kpi-value" id="kpi-total-links">170 <span class="kpi-unit">Enlaces</span></div>
+        <div class="kpi-subtitle">Distribuidos en 26 Instituciones</div>
+      </div>
+      <div class="kpi-card kpi-amber">
+        <div class="kpi-title">Municipios con Conectividad</div>
+        <div class="kpi-value" id="kpi-total-munis">47 <span class="kpi-unit">Municipios</span></div>
+        <div class="kpi-subtitle">En los 22 departamentos</div>
+      </div>
+      <div class="kpi-card kpi-purple">
+        <div class="kpi-title">Departamento con Mayor Capacidad</div>
+        <div class="kpi-value" style="font-size: 1.45rem;">Guatemala <span class="kpi-unit">4,255 Mbps</span></div>
+        <div class="kpi-subtitle">64.1% de la capacidad total del país</div>
+      </div>
+    </section>
+
+    <!-- CONTROL BAR -->
+    <section class="controls-panel">
+      <div class="control-group">
+        <span class="control-label">Métrica del Mapa:</span>
+        <div class="pill-group">
+          <button class="pill-btn active" onclick="setMapMetric('capacidad_total', this)">Capacidad (Mbps)</button>
+          <button class="pill-btn" onclick="setMapMetric('enlaces_total', this)">Cantidad Enlaces</button>
+          <button class="pill-btn" onclick="setMapMetric('municipios_count', this)">Municipios</button>
+          <button class="pill-btn" onclick="setMapMetric('promedio_mbps_enlace', this)">Promedio Mbps/Enlace</button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <span class="control-label">Institución:</span>
+        <select class="select-input" id="filter-institution" onchange="applyFilters()">
+          <option value="">Todas las Instituciones (26)</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <span class="control-label">Equipamiento:</span>
+        <select class="select-input" id="filter-type" onchange="applyFilters()">
+          <option value="">Todos los Tipos</option>
+          <option value="CON EQUIPO">Con Equipo (118)</option>
+          <option value="SIN EQUIPO">Sin Equipo (31)</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <button class="btn btn-outline" style="color: var(--text-main); border-color: var(--border-color);" onclick="resetAllFilters()">🔄 Restablecer</button>
+      </div>
+    </section>
+
+    <!-- MAP & SIDEBAR GRID -->
+    <section class="dashboard-grid">
+      
+      <!-- MAP CARD -->
+      <div class="map-card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🗺️ Mapa Interactivo de Guatemala</span>
+          </div>
+          <div class="control-group">
+            <label style="font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+              <input type="checkbox" id="toggle-labels" checked onchange="toggleLabels()"> Etiquetas
+            </label>
+            <span class="badge" id="selected-dept-badge" style="background: var(--primary); color: white;">Vista Nacional</span>
+          </div>
+        </div>
+
+        <div class="map-container" id="map-wrapper">
+          <div class="map-tools">
+            <button class="map-tool-btn" onclick="zoomIn()" title="Acercar">+</button>
+            <button class="map-tool-btn" onclick="zoomOut()" title="Alejar">−</button>
+            <button class="map-tool-btn" onclick="resetMapZoom()" title="Centrar">⟲</button>
+          </div>
+
+          <!-- SVG GUATEMALA WITH BELIZE -->
+          <svg id="svg-guatemala" viewBox="0 0 850 567" xmlns="http://www.w3.org/2000/svg">
+            <g id="map-viewport">
+              <g id="belice-group"></g>
+              <g id="paths-group"></g>
+              <g id="labels-group"></g>
+            </g>
+          </svg>
+
+          <!-- TOOLTIP -->
+          <div class="map-tooltip" id="map-tooltip"></div>
+        </div>
+
+        <!-- LEGEND -->
+        <div class="map-legend">
+          <span id="legend-min">0 Mbps</span>
+          <div class="legend-bar-container" id="legend-bar" style="background: linear-gradient(to right, #e0f2fe, #0284c7, #1e3a8a);"></div>
+          <span id="legend-max">4,255 Mbps</span>
+        </div>
+      </div>
+
+      <!-- SIDEBAR DETAILS CARD -->
+      <div class="sidebar-card">
+        <div class="dept-details-header">
+          <div>
+            <h2 id="detail-dept-name">Guatemala (Nacional)</h2>
+            <p id="detail-dept-sub" style="font-size: 0.8rem; opacity: 0.9;">Resumen general consolidado</p>
+          </div>
+          <button class="btn btn-outline" style="padding: 0.25rem 0.6rem; font-size: 0.75rem;" onclick="resetDepartmentSelection()">Ver Todos</button>
+        </div>
+
+        <div class="dept-stat-grid">
+          <div class="dept-stat-box">
+            <div class="title">Capacidad Filtrada</div>
+            <div class="val" id="detail-cap">6,635 Mbps</div>
+          </div>
+          <div class="dept-stat-box">
+            <div class="title">Enlaces Totales</div>
+            <div class="val" id="detail-links">170</div>
+          </div>
+          <div class="dept-stat-box">
+            <div class="title">Municipios Activos</div>
+            <div class="val" id="detail-munis">47</div>
+          </div>
+          <div class="dept-stat-box">
+            <div class="title">% Aporte Nacional</div>
+            <div class="val" id="detail-pct">100%</div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size: 0.85rem; font-weight: 700; margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
+            <span>Desglose por Municipio</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted);" id="muni-count-badge">47 municipios</span>
+          </div>
+          <div class="muni-bars-list" id="muni-bars-list">
+            <!-- Municipal bars injected here -->
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size: 0.85rem; font-weight: 700; margin-bottom: 0.5rem;">
+            <span>Instituciones Principales</span>
+          </div>
+          <div class="muni-bars-list" id="inst-bars-list" style="max-height: 140px;">
+            <!-- Institution bars injected here -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TABLE SECTION -->
+    <section class="table-card">
+      <div class="table-tools">
+        <div class="card-title">
+          <span>📋 Registro Detallado de Enlaces de Internet (170 Registros)</span>
+        </div>
+        <div class="control-group">
+          <input type="text" class="text-input" id="table-search" placeholder="🔍 Buscar institución, municipio, ID..." oninput="applyTableSearch()">
+          <span class="badge" id="table-count-badge" style="background: var(--bg-main); color: var(--text-muted);">170 de 170</span>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table id="links-table">
+          <thead>
+            <tr>
+              <th onclick="sortTable('NO.')">No. ↕</th>
+              <th onclick="sortTable('SUCURSAL GENERAL')">Institución / Sucursal ↕</th>
+              <th onclick="sortTable('ID')">ID ↕</th>
+              <th onclick="sortTable('DEPARTAMENTO')">Departamento ↕</th>
+              <th onclick="sortTable('MUNICIPIO')">Municipio ↕</th>
+              <th onclick="sortTable('CAPACIDAD CONTRATO')">Capacidad (Mbps) ↕</th>
+              <th onclick="sortTable('TIPO')">Tipo ↕</th>
+              <th>Dirección</th>
+            </tr>
+          </thead>
+          <tbody id="table-body">
+            <!-- Rows injected here -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p style="font-weight:700; font-size:0.875rem;">© 2026 EMPRESA GUATEMALTECA DE TELECOMUNICACIONES GUATEL -GUATEL-.</p>
+    <p style="margin-top: 0.35rem; font-size: 0.75rem; color: var(--text-muted);">Reporte Oficial de Enlaces de Internet · Visualización Geoespacial e Interactiva SVG</p>
+  </footer>
+
+  <!-- SCRIPT DATA & LOGIC -->
+  <script>
+    const DASHBOARD_DATA = {"total_capacity": 6635, "total_links": 170, "total_departments": 22, "total_municipalities": 47, "departments": {"Alta Verapaz": {"departamento": "Alta Verapaz", "capacidad_total": 230, "porcentaje_nacional": 3.47, "enlaces_total": 9, "municipios_count": 2, "promedio_mbps_enlace": 25.6, "municipios": {"Chisec": {"municipio": "Chisec", "capacidad": 10, "enlaces": 1, "instituciones": {"CONAMIGUA": 1}}, "Cobán": {"municipio": "Cobán", "capacidad": 220, "enlaces": 8, "instituciones": {"DIGEF": 2, "MAGA DICORER": 2, "INSTITUTO DE LA VICTIMA": 2, "CONAMIGUA": 1, "PGN": 1}}}, "instituciones": {"CONAMIGUA": {"capacidad": 25, "enlaces": 2}, "DIGEF": {"capacidad": 50, "enlaces": 2}, "INSTITUTO DE LA VICTIMA": {"capacidad": 100, "enlaces": 2}, "MAGA DICORER": {"capacidad": 45, "enlaces": 2}, "PGN": {"capacidad": 10, "enlaces": 1}}, "tipos": {"CON EQUIPO": 6, "SIN EQUIPO": 2, "": 1}}, "Baja Verapaz": {"departamento": "Baja Verapaz", "capacidad_total": 65, "porcentaje_nacional": 0.98, "enlaces_total": 4, "municipios_count": 2, "promedio_mbps_enlace": 16.2, "municipios": {"Salamá": {"municipio": "Salamá", "capacidad": 45, "enlaces": 3, "instituciones": {"DIGEF": 1, "PGN": 1, "CONAMIGUA": 1}}, "San Jerónimo": {"municipio": "San Jerónimo", "capacidad": 20, "enlaces": 1, "instituciones": {"MAGA DICORER": 1}}}, "instituciones": {"CONAMIGUA": {"capacidad": 10, "enlaces": 1}, "DIGEF": {"capacidad": 25, "enlaces": 1}, "MAGA DICORER": {"capacidad": 20, "enlaces": 1}, "PGN": {"capacidad": 10, "enlaces": 1}}, "tipos": {"CON EQUIPO": 3, "": 1}}, "Chimaltenango": {"departamento": "Chimaltenango", "capacidad_total": 55, "porcentaje_nacional": 0.83, "enlaces_total": 3, "municipios_count": 1, "promedio_mbps_enlace": 18.3, "municipios": {"Chimaltenango": {"municipio": "Chimaltenango", "capacidad": 55, "enlaces": 3, "instituciones": {"DIGEF": 1, "MAGA DICORER": 1, "PGN": 1}}}, "instituciones": {"DIGEF": {"capacidad": 25, "enlaces": 1}, "MAGA DICORER": {"capacidad": 20, "enlaces": 1}, "PGN": {"capacidad": 10, "enlaces": 1}}, "tipos": {"CON EQUIPO": 3}}, "Chiquimula": {"departamento": "Chiquimula", "capacidad_total": 75, "porcentaje_nacional": 1.13, "enlaces_total": 5, "municipios_count": 4, "promedio_mbps_enlace": 15.0, "municipios": {"Chiquimula": {"municipio": "Chiquimula", "capacidad": 30, "enlaces": 2, "instituciones": {"MAGA DICORER": 1, "PGN": 1}}, "Concepción Las Minas": {"municipio": "Concepción Las Minas", "capacidad": 10, "enlaces": 1, "instituciones": {"CONAMIGUA": 1}}, "Esquipulas": {"municipio": "Esquipulas", "capacidad": 10, "enlaces": 1, "instituciones": {"CONAMIGUA": 1}}, "Quezaltepeque": {"municipio": "Quezaltepeque", "capacidad": 25, "enlaces": 1, "instituciones": {"DIGEF": 1}}}, "instituciones": {"CONAMIGUA": {"capacidad": 20, "enlaces": 2}, "DIGEF": {"capacidad": 25, "enlaces": 1}, "MAGA DICORER": {"capacidad": 20, "enlaces": 1}, "PGN": {"capacidad": 10, "enlaces": 1}}, "tipos": {"CON EQUIPO": 3, "": 2}}, "El Progreso": {"departamento": "El Progreso", "capacidad_total": 70, "porcentaje_nacional": 1.06, "enlaces_total": 4, "municipios_count": 1, "promedio_mbps_enlace": 17.5, "municipios": {"Guastatoya": {"municipio": "Guastatoya", "capacidad": 70, "enlaces": 4, "instituciones": {"CONAMIGUA": 1, "DIGEF": 1, "MAGA DICORER": 1, "PGN": 1}}}, "instituciones": {"CONAMIGUA": {"capacidad": 15, "enlaces": 1}, "DIGEF": {"capacidad": 25, "enlaces": 1}, "MAGA DICORER": {"capacidad": 20, "enlaces": 1}, "PGN": {"capacidad": 10, "enlaces": 1}}, "tipos": {"CON EQUIPO": 4}}, "Escuintla": {"departamento": "Escuintla", "capacidad_total": 330, "porcentaje_nacional": 4.97, "enlaces_total": 7, "municipios_count": 1, "promedio_mbps_enlace": 47.1, "municipios": {"Escuintla": {"municipio": "Escuintla", "capacidad": 330, "enlaces": 7, "instituciones": {"INSTITUTO DE LA VICTIMA": 2, "CONAMIGUA": 1, "DIGEF": 1, "MAGA DICORER": 1, "PGN": 1, "HOSPITAL DE ESCUINTLA": 1}}}, "instituciones": {"CONAMIGUA": {"capacidad": 15, "enlaces": 1}, "DIGEF": {"capacidad": 25, "enlaces": 1}, "HOSPITAL DE ESCUINTLA": {"capacidad": 200, "enlaces": 1}, "INSTITUTO DE LA VICTIMA": {"capacidad": 60, "enlaces": 2}, "MAGA DICORER": {"capacidad": 20, "enlaces": 1}, "PGN": {"capacidad": 10, "enlaces": 1}}, "tipos": {"CON EQUIPO": 4, "SIN EQUIPO": 2, "": 1}}, "Guatemala": {"departamento": "Guatemala", "capacidad_total": 4255, "porcentaje_nacional": 64.13, "enlaces_total": 56, "municipios_count": 3, "promedio_mbps_enlace": 76.0, "municipios": {"Guatemala": {"municipio": "Guatemala", "capacidad": 3830, "enlaces": 48, "instituciones": {"MPAS": 9, "PGN": 8, "COPADEH": 3, "MAGA VISAN": 3, "DIGECAM": 2, "DIGEF": 2, "MAGA DICORER": 2, "FONTIERRAS": 2, "IGM": 2, "SCEP": 2, "INSTITUTO DE LA VICTIMA": 2, "CONADI": 1, "GUATEL": 1, "INGECOP": 1, "MCD FORTALECIMIENTO DE CULTURA": 1, "MIDES": 1, "SUBSECRETARIA DE PROTECCION Y ACOGIMIENTO A LA NIÑEZ Y ADOLESCENCIA": 1, "GAE": 1, "CONAP": 1, "FIUSAC": 1, "MINTRAB": 1, "MICIVI": 1}}, "Mixco": {"municipio": "Mixco", "capacidad": 60, "enlaces": 3, "instituciones": {"DIGEF": 1, "PGN": 1, "INSTITUTO DE LA VICTIMA": 1}}, "Villa Nueva": {"municipio": "Villa Nueva", "capacidad": 365, "enlaces": 5, "instituciones": {"HOSPITAL NACIONAL DE VILLA NUEVA": 2, "MAGA VISAN": 2, "PGN": 1}}}, "instituciones": {"CONADI": {"capacidad": 70, "enlaces": 1}, "CONAP": {"capacidad": 150, "enlaces": 1}, "COPADEH": {"capacidad": 130, "enlaces": 3}, "DIGECAM": {"capacidad": 100, "enlaces": 2}, "DIGEF": {"capacidad": 425, "enlaces": 3}, "FIUSAC": {"capacidad": 160, "enlaces": 1}, "FONTIERRAS": {"capacidad": 90, "enlaces": 2}, "GAE": {"capacidad": 100, "enlaces": 1}, "GUATEL": {"capacidad": 100, "enlaces": 1}, "HOSPITAL NACIONAL DE VILLA NUEVA": {"capacidad": 295, "enlaces": 2}, "IGM": {"capacidad": 100, "enlaces": 2}, "INGECOP": {"capacidad": 77, "enlaces": 1}, "INSTITUTO DE LA VICTIMA": {"capacidad": 265, "enlaces": 3}, "MAGA DICORER": {"capacidad": 70, "enlaces": 2}, "MAGA VISAN": {"capacidad": 230, "enlaces": 5}, "MCD FORTALECIMIENTO DE CULTURA": {"capacidad": 40, "enlaces": 1}, "MICIVI": {"capacidad": 31, "enlaces": 1}, "MIDES": {"capacidad": 200, "enlaces": 1}, "MINTRAB": {"capacidad": 450, "enlaces": 1}, "MPAS": {"capacidad": 940, "enlaces": 9}, "PGN": {"capacidad": 160, "enlaces": 10}, "SCEP": {"capacidad": 32, "enlaces": 2}, "SUBSECRETARIA DE PROTECCION Y ACOGIMIENTO A LA NIÑEZ Y ADOLESCENCIA": {"capacidad": 40, "enlaces": 1}}, "tipos": {"CON EQUIPO": 35, "SIN EQUIPO": 21}}, "Huehuetenango": {"departamento": "Huehuetenango", "capacidad_total": 140, "porcentaje_nacional": 2.11, "enlaces_total": 9, "municipios_count": 5, "promedio_mbps_enlace": 15.6, "municipios": {"Huehuetenango": {"municipio": "Huehuetenango", "capacidad": 80, "enlaces": 5, "instituciones": {"CONAMIGUA": 1, "DIGEF": 1, "MAGA DICORER": 1, "PGN": 1, "MINEX": 1}}, "Jacaltenango": {"municipio": "Jacaltenango", "capacidad": 20, "enlaces": 1, "instituciones": {"MAGA DICORER": 1}}, "La Democracia": {"municipio": "La Democracia", "capacidad": 15, "enlaces": 1, "instituciones": {"CONAMIGUA": 1}}, "Santa Eulalia": {"municipio": "Santa Eulalia", "capacidad": 10, "enlaces": 1, "instituciones": {"CONAMIGUA": 1}}, "Todos Santos Cuchumatán": {"municipio": "Todos Santos Cuchumatán", "capacidad": 15, "enlaces": 1, "instituciones": {"CONAMIGUA": 1}}}, "instituciones": {"CONAMIGUA": {"capacidad": 55, "enlaces": 4}, "DIGEF": {"capacidad": 25, "enlaces": 1}, "MAGA DICORER": {"capacidad": 40, "enlaces": 2}, "MINEX": {"capacidad": 10, "enlaces": 1}, "PGN": {"capacidad": 10, "enlaces": 1}}, "tipos": {"CON EQUIPO": 7, "SIN EQUIPO": 1, "": 1}}, "Izabal": {"departamento": "Izabal", "capacidad_total": 65, "porcentaje_nacional": 0.98, "enlaces_total": 4, "municipios_count": 1, "promedio_mbps_enlace": 16.2, "municipios": {"Puerto Barrios": {"municipio": "Puerto Barrios", "capacidad": 65, "enlaces": 4, "instituciones": {"DIGEF": 1, "MAGA DICORER": 1, "PGN": 1, "CONAMIGUA": 1}}}, "instituciones": {"CONAMIGUA": {"capacidad": 10, "enlaces": 1}, "DIGEF": {"capacidad": 25, "enlaces": 1}, "MAGA DICORER": {"capacidad": 20, "enlaces": 1}, "PGN": {"capacidad": 10, "enlaces": 1}}, "tipos": {"CON EQUIPO": 3, "": 1}}, "Jalapa": {"departamento": "Jalapa", "capacidad_total": 70, "porcentaje_nacional": 1.06, "enlaces_total": 4, "municipios_count": 1, "promedio_mbps_enlace": 17.5, "municipios": {"Jalapa": {"municipio": "Jalapa", "capacidad": 70, "enlaces": 4, "instituciones": {"CONAMIGUA": 1, "DIGEF": 1, "MAGA DICORER": 1, "PGN": 1}}}, "instituciones": {"CONAMIGUA": {"capacidad": 15, "enlaces": 1}, "DIGEF": {"capacidad": 25, "enlaces": 1}, "MAGA DICORER": {"capacidad": 20, "enlaces": 1}, "PGN": {"capacidad": 10, "enlaces": 1}}, "tipos": {"CON EQUIPO": 4}}, "Jutiapa": {"departamento": "Jutiapa", "capacidad_total": 135, "porcentaje_nacional": 2.03, "enlaces_total": 7, "municipios_count": 2, "promedio_mbps_enlace": 19.3, "municipios": {"El Progreso": {"municipio": "El Progreso", "capacidad": 20, "enlaces": 1, "instituciones": {"MAGA DICORER": 1}}, "Jutiapa": {"municipio": "Jutiapa", "capacidad": 115, "enlaces": 6, "instituciones": {"INSTITUTO DE LA VICTIMA": 2, "DIGEF": 1, "PGN": 1, "MINEX": 1, "CONAMIGUA": 1}}}, "instituciones": {"CONAMIGUA": {"capacidad": 10, "enlaces": 1}, "DIGEF": {"capacidad": 25, "enlaces": 1}, "INSTITUTO DE LA VICTIMA": {"capacidad": 60, "enlaces": 2}, "MAGA DICORER": {"capacidad": 20, "enlaces": 1}, "MINEX": {"capacidad": 10, "enlaces": 1}, "PGN": {"capacidad": 10, "enlaces": 1}}, "tipos": {"CON EQUIPO": 3, "SIN EQUIPO": 3, "": 1}}, "Petén": {"departamento": "Petén", "capacidad_total": 180, "porcentaje_nacional": 2.71, "enlaces_total": 6, "municipios_count": 3, "promedio_mbps_enlace": 30.0, "municipios": {"Flores": {"municipio": "Flores", "capacidad": 45, "enlaces": 2, "instituciones": {"DIGEF": 1, "MAGA DICORER": 1}}, "La Libertad": {"municipio": "La Libertad", "capacidad": 10, "enlaces": 1, "instituciones": {"CONAMIGUA": 1}}, "San Benito": {"municipio": "San Benito", "capacidad": 125, "enlaces": 3, "instituciones": {"CONAP": 1, "CONAMIGUA": 1, "PGN": 1}}}, "instituciones": {"CONAMIGUA": {"capacidad": 25, "enlaces": 2}, "CONAP": {"capacidad": 100, "enlaces": 1}, "DIGEF": {"capacidad": 25, "enlaces": 1}, "MAGA DICORER": {"capacidad": 20, "enlaces": 1}, "PGN": {"capacidad": 10, "enlaces": 1}}, "tipos": {"CON EQUIPO": 5, "": 1}}, "Quetzaltenango": {"departamento": "Quetzaltenango", "capacidad_total": 215, "porcentaje_nacional": 3.24, "enlaces_total": 9, "municipios_count": 3, "promedio_mbps_enlace": 23.9, "municipios": {"Coatepeque": {"municipio": "Coatepeque", "capacidad": 10, "enlaces": 1, "instituciones": {"PGN": 1}}, "Quetzaltenango": {"municipio": "Quetzaltenango", "capacidad": 195, "enlaces": 7, "instituciones": {"INSTITUTO DE LA VICTIMA": 2, "DIGEF": 1, "MAGA DICORER": 1, "PGN": 1, "MINEX": 1, "CONAMIGUA": 1}}, "Salcajá": {"municipio": "Salcajá", "capacidad": 10, "enlaces": 1, "instituciones": {"CONAMIGUA": 1}}}, "instituciones": {"CONAMIGUA": {"capacidad": 20, "enlaces": 2}, "DIGEF": {"capacidad": 25, "enlaces": 1}, "INSTITUTO DE LA VICTIMA": {"capacidad": 120, "enlaces": 2}, "MAGA DICORER": {"capacidad": 20, "enlaces": 1}, "MINEX": {"capacidad": 10, "enlaces": 1}, "PGN": {"capacidad": 20, "enlaces": 2}}, "tipos": {"CON EQUIPO": 4, "": 4, "SIN EQUIPO": 1}}, "Quiché": {"departamento": "Quiché", "capacidad_total": 70, "porcentaje_nacional": 1.06, "enlaces_total": 4, "municipios_count": 1, "promedio_mbps_enlace": 17.5, "municipios": {"Santa Cruz del Quiché": {"municipio": "Santa Cruz del Quiché", "capacidad": 70, "enlaces": 4, "instituciones": {"CONAMIGUA": 1, "DIGEF": 1, "MAGA DICORER": 1, "PGN": 1}}}, "instituciones": {"CONAMIGUA": {"capacidad": 15, "enlaces": 1}, "DIGEF": {"capacidad": 25, "enlaces": 1}, "MAGA DICORER": {"capacidad": 20, "enlaces": 1}, "PGN": {"capacidad": 10, "enlaces": 1}}, "tipos": {"CON EQUIPO": 4}}, "Retalhuleu": {"departamento": "Retalhuleu", "capacidad_total": 65, "porcentaje_nacional": 0.98, "enlaces_total": 4, "municipios_count": 1, "promedio_mbps_enlace": 16.2, "municipios": {"Retalhuleu": {"municipio": "Retalhuleu", "capacidad": 65, "enlaces": 4, "instituciones": {"DIGEF": 1, "MAGA DICORER": 1, "PGN": 1, "CONAMIGUA": 1}}}, "instituciones": {"CONAMIGUA": {"capacidad": 10, "enlaces": 1}, "DIGEF": {"capacidad": 25, "enlaces": 1}, "MAGA DICORER": {"capacidad": 20, "enlaces": 1}, "PGN": {"capacidad": 10, "enlaces": 1}}, "tipos": {"CON EQUIPO": 3, "": 1}}, "Sacatepéquez": {"departamento": "Sacatepéquez", "capacidad_total": 65, "porcentaje_nacional": 0.98, "enlaces_total": 4, "municipios_count": 2, "promedio_mbps_enlace": 16.2, "municipios": {"Antigua Guatemala": {"municipio": "Antigua Guatemala", "capacidad": 55, "enlaces": 3, "instituciones": {"DIGEF": 1, "MAGA DICORER": 1, "PGN": 1}}, "Santa Lucía Milpas Altas": {"municipio": "Santa Lucía Milpas Altas", "capacidad": 10, "enlaces": 1, "instituciones": {"CONAMIGUA": 1}}}, "instituciones": {"CONAMIGUA": {"capacidad": 10, "enlaces": 1}, "DIGEF": {"capacidad": 25, "enlaces": 1}, "MAGA DICORER": {"capacidad": 20, "enlaces": 1}, "PGN": {"capacidad": 10, "enlaces": 1}}, "tipos": {"CON EQUIPO": 3, "": 1}}, "San Marcos": {"departamento": "San Marcos", "capacidad_total": 120, "porcentaje_nacional": 1.81, "enlaces_total": 9, "municipios_count": 5, "promedio_mbps_enlace": 13.3, "municipios": {"Ayutla": {"municipio": "Ayutla", "capacidad": 25, "enlaces": 2, "instituciones": {"CONAMIGUA": 1, "MINEX": 1}}, "Malacatán": {"municipio": "Malacatán", "capacidad": 10, "enlaces": 1, "instituciones": {"PGN": 1}}, "San Marcos": {"municipio": "San Marcos", "capacidad": 55, "enlaces": 4, "instituciones": {"CONAMIGUA": 1, "MAGA DICORER": 1, "PGN": 1, "DIGEF": 1}}, "San Pedro Sacatepéquez": {"municipio": "San Pedro Sacatepéquez", "capacidad": 20, "enlaces": 1, "instituciones": {"MAGA DICORER": 1}}, "Tacaná": {"municipio": "Tacaná", "capacidad": 10, "enlaces": 1, "instituciones": {"CONAMIGUA": 1}}}, "instituciones": {"CONAMIGUA": {"capacidad": 40, "enlaces": 3}, "DIGEF": {"capacidad": 10, "enlaces": 1}, "MAGA DICORER": {"capacidad": 40, "enlaces": 2}, "MINEX": {"capacidad": 10, "enlaces": 1}, "PGN": {"capacidad": 20, "enlaces": 2}}, "tipos": {"CON EQUIPO": 6, "": 2, "SIN EQUIPO": 1}}, "Santa Rosa": {"departamento": "Santa Rosa", "capacidad_total": 70, "porcentaje_nacional": 1.06, "enlaces_total": 4, "municipios_count": 2, "promedio_mbps_enlace": 17.5, "municipios": {"Cuilapa": {"municipio": "Cuilapa", "capacidad": 45, "enlaces": 3, "instituciones": {"CONAMIGUA": 1, "MAGA DICORER": 1, "PGN": 1}}, "Guazacapán": {"municipio": "Guazacapán", "capacidad": 25, "enlaces": 1, "instituciones": {"DIGEF": 1}}}, "instituciones": {"CONAMIGUA": {"capacidad": 15, "enlaces": 1}, "DIGEF": {"capacidad": 25, "enlaces": 1}, "MAGA DICORER": {"capacidad": 20, "enlaces": 1}, "PGN": {"capacidad": 10, "enlaces": 1}}, "tipos": {"CON EQUIPO": 4}}, "Sololá": {"departamento": "Sololá", "capacidad_total": 70, "porcentaje_nacional": 1.06, "enlaces_total": 4, "municipios_count": 1, "promedio_mbps_enlace": 17.5, "municipios": {"Sololá": {"municipio": "Sololá", "capacidad": 70, "enlaces": 4, "instituciones": {"CONAMIGUA": 1, "DIGEF": 1, "MAGA DICORER": 1, "PGN": 1}}}, "instituciones": {"CONAMIGUA": {"capacidad": 15, "enlaces": 1}, "DIGEF": {"capacidad": 25, "enlaces": 1}, "MAGA DICORER": {"capacidad": 20, "enlaces": 1}, "PGN": {"capacidad": 10, "enlaces": 1}}, "tipos": {"CON EQUIPO": 4}}, "Suchitepéquez": {"departamento": "Suchitepéquez", "capacidad_total": 170, "porcentaje_nacional": 2.56, "enlaces_total": 6, "municipios_count": 2, "promedio_mbps_enlace": 28.3, "municipios": {"Mazatenango": {"municipio": "Mazatenango", "capacidad": 45, "enlaces": 3, "instituciones": {"CONAMIGUA": 1, "MAGA DICORER": 1, "PGN": 1}}, "San Antonio Suchitepéquez": {"municipio": "San Antonio Suchitepéquez", "capacidad": 125, "enlaces": 3, "instituciones": {"INSTITUTO DE LA VICTIMA": 2, "DIGEF": 1}}}, "instituciones": {"CONAMIGUA": {"capacidad": 15, "enlaces": 1}, "DIGEF": {"capacidad": 25, "enlaces": 1}, "INSTITUTO DE LA VICTIMA": {"capacidad": 100, "enlaces": 2}, "MAGA DICORER": {"capacidad": 20, "enlaces": 1}, "PGN": {"capacidad": 10, "enlaces": 1}}, "tipos": {"CON EQUIPO": 4, "": 2}}, "Totonicapán": {"departamento": "Totonicapán", "capacidad_total": 65, "porcentaje_nacional": 0.98, "enlaces_total": 4, "municipios_count": 2, "promedio_mbps_enlace": 16.2, "municipios": {"San Cristóbal Totonicapán": {"municipio": "San Cristóbal Totonicapán", "capacidad": 10, "enlaces": 1, "instituciones": {"CONAMIGUA": 1}}, "Totonicapán": {"municipio": "Totonicapán", "capacidad": 55, "enlaces": 3, "instituciones": {"DIGEF": 1, "MAGA DICORER": 1, "PGN": 1}}}, "instituciones": {"CONAMIGUA": {"capacidad": 10, "enlaces": 1}, "DIGEF": {"capacidad": 25, "enlaces": 1}, "MAGA DICORER": {"capacidad": 20, "enlaces": 1}, "PGN": {"capacidad": 10, "enlaces": 1}}, "tipos": {"CON EQUIPO": 3, "": 1}}, "Zacapa": {"departamento": "Zacapa", "capacidad_total": 55, "porcentaje_nacional": 0.83, "enlaces_total": 4, "municipios_count": 2, "promedio_mbps_enlace": 13.8, "municipios": {"Estanzuela": {"municipio": "Estanzuela", "capacidad": 15, "enlaces": 1, "instituciones": {"CONAMIGUA": 1}}, "Zacapa": {"municipio": "Zacapa", "capacidad": 40, "enlaces": 3, "instituciones": {"MAGA DICORER": 1, "PGN": 1, "DIGEF": 1}}}, "instituciones": {"CONAMIGUA": {"capacidad": 15, "enlaces": 1}, "DIGEF": {"capacidad": 10, "enlaces": 1}, "MAGA DICORER": {"capacidad": 20, "enlaces": 1}, "PGN": {"capacidad": 10, "enlaces": 1}}, "tipos": {"CON EQUIPO": 3, "": 1}}}, "links": [{"NO.": 1, "SUCURSAL GENERAL": "COPADEH", "ID": "BCGT01BC0393", "DIRECCION": "COMISION PRESIDENCIAL POR LA PAZ Y LOS DERECHOS HUMANOS - COPADEH-, 13 CALLE 15-38 Zona 13 Ciudad de Guatemala.", "CAPACIDAD CONTRATO": 75, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 1}, {"NO.": 2, "SUCURSAL GENERAL": "CONAP", "ID": "BCGT01BC0631", "DIRECCION": "Calle Litoral del Lago 5 calle, 1 avenida, zona 1, San Benito, Petén", "CAPACIDAD CONTRATO": 100, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Petén", "MUNICIPIO": "San Benito", "MUNICIPIO_UNICO": 1}, {"NO.": 3, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "BCGT1BC0723V2", "DIRECCION": "5ta. Avenida 6-10, Zona 1, Centro Cultural de la Municipalidad de Mazatenango, Suchitepequez.", "CAPACIDAD CONTRATO": 15, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Suchitepéquez", "MUNICIPIO": "Mazatenango", "MUNICIPIO_UNICO": 1}, {"NO.": 4, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "BCGT1BC0726V2", "DIRECCION": "4ta. Avenida 2-25, Zona 1, Huehuetenango, Gobernación Departamental de Huehuetenango.", "CAPACIDAD CONTRATO": 15, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Huehuetenango", "MUNICIPIO": "Huehuetenango", "MUNICIPIO_UNICO": 1}, {"NO.": 5, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "BCGT1BC0729V2", "DIRECCION": "Edificio Municipal, Centro Civico, La Democracia, Huehuetenango", "CAPACIDAD CONTRATO": 15, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Huehuetenango", "MUNICIPIO": "La Democracia", "MUNICIPIO_UNICO": 1}, {"NO.": 6, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "BCGT1BC0722V2", "DIRECCION": "4ta. Avenida y 5ta calle, esquina del parque central edificio de Gobernación 1er nivel, Solola.", "CAPACIDAD CONTRATO": 15, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Sololá", "MUNICIPIO": "Sololá", "MUNICIPIO_UNICO": 1}, {"NO.": 7, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "BCGT1BC0725V2", "DIRECCION": "1a. Avenida entre 2da y 3era calle zona 1, Santa Cruz del Quiche, edificio sde Gobernacion del Quiche", "CAPACIDAD CONTRATO": 15, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Quiché", "MUNICIPIO": "Santa Cruz del Quiché", "MUNICIPIO_UNICO": 1}, {"NO.": 8, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "BCGT1BC0730V2", "DIRECCION": "Barrio el Centro, zona 1, Centro de Capacitación # 1, adscrito a la Municipalidad de Estanzuela Zacapa.", "CAPACIDAD CONTRATO": 15, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Zacapa", "MUNICIPIO": "Estanzuela", "MUNICIPIO_UNICO": 1}, {"NO.": 9, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "BCGT1BC0733V2", "DIRECCION": "9a. Calle 3-40, zona 1, edificio de Gobernación Departametal de Escuintla.", "CAPACIDAD CONTRATO": 15, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Escuintla", "MUNICIPIO": "Escuintla", "MUNICIPIO_UNICO": 1}, {"NO.": 10, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "BCGT1BC0724V2", "DIRECCION": "5ta. Calle entre 2da y 3era avenida, zona 0 frente al Parque Central de aldea el Triunfo del municipio de Ayutla, San Marcos.", "CAPACIDAD CONTRATO": 15, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "San Marcos", "MUNICIPIO": "Ayutla", "MUNICIPIO_UNICO": 1}, {"NO.": 11, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "BCGT1BC0731V2", "DIRECCION": "6ta. Calle 1-76 zona 4, Interior del Consejo Regional de Desarrollo Urbano (COREDUR) Coban, Alta Verapaz", "CAPACIDAD CONTRATO": 15, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Alta Verapaz", "MUNICIPIO": "Cobán", "MUNICIPIO_UNICO": 1}, {"NO.": 12, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "BCGT1BC0734V2", "DIRECCION": "1ra Avenida 12-22 zona 1, San Benito, Petén, a la par del Ministerio de Desarrollo Social-MIDES-", "CAPACIDAD CONTRATO": 15, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Petén", "MUNICIPIO": "San Benito", "MUNICIPIO_UNICO": 0}, {"NO.": 13, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "BCGT1BC0732V2", "DIRECCION": "6a Avenida, zona 1, Barrio La Democracia, Jalapa, Gobernación Deprtamental de Jalapa.", "CAPACIDAD CONTRATO": 15, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Jalapa", "MUNICIPIO": "Jalapa", "MUNICIPIO_UNICO": 1}, {"NO.": 14, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "BCGT1BC0736V2", "DIRECCION": "Santa Rosa, Cuilapa", "CAPACIDAD CONTRATO": 15, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Santa Rosa", "MUNICIPIO": "Cuilapa", "MUNICIPIO_UNICO": 1}, {"NO.": 15, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "BCGT1BC0735V2", "DIRECCION": "Guastatoya, El Progreso", "CAPACIDAD CONTRATO": 15, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "El Progreso", "MUNICIPIO": "Guastatoya", "MUNICIPIO_UNICO": 1}, {"NO.": 16, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "BCGT1BC0727V2", "DIRECCION": "San Marcos, 7a avenida 14-26 zona 3, San Marcos", "CAPACIDAD CONTRATO": 15, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "San Marcos", "MUNICIPIO": "San Marcos", "MUNICIPIO_UNICO": 1}, {"NO.": 17, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "BCGT1BC0728V2", "DIRECCION": "TODOS SANTOS CUCHUMATANES, Calle principal , Municipalidad de Todos Los Santos Cuchumatanes", "CAPACIDAD CONTRATO": 15, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Huehuetenango", "MUNICIPIO": "Todos Santos Cuchumatán", "MUNICIPIO_UNICO": 1}, {"NO.": 18, "SUCURSAL GENERAL": "CONADI", "ID": "BCGT1BC0693V2", "DIRECCION": "1ª. Avenida 4-18, zona 1, Guatemala.", "CAPACIDAD CONTRATO": 70, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 19, "SUCURSAL GENERAL": "DIGECAM", "ID": "BCGT01BC0391", "DIRECCION": "12 avenida 31-09 zona 5DIRECCIÓN GENERAL DE ARMAS Y MUNICIONES -DIGECAM- PRINCIPAL", "CAPACIDAD CONTRATO": 50, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 20, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT01BC0395", "DIRECCION": "DIGEF PRINCIPAL, 32 calle 9-10 zona 11 Colonia Granai, Guateamala", "CAPACIDAD CONTRATO": 300, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 21, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT1BC0640V2", "DIRECCION": "1a. Ave 12-408, zona 5, Santa Cruz del Quiche, Quiche", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Quiché", "MUNICIPIO": "Santa Cruz del Quiché", "MUNICIPIO_UNICO": 0}, {"NO.": 22, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT1BC0588V2", "DIRECCION": "Calzada Rabin Ajau zona 11 Edif. INJAV Coban, Alta Verapaz", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Alta Verapaz", "MUNICIPIO": "Cobán", "MUNICIPIO_UNICO": 0}, {"NO.": 23, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT1BC0586V2", "DIRECCION": "Salida a Santa Maria de Jesus, km 2, Antigua Guatemala,entrada a San Cristobal el bajo,contiguo al instituto normal para varones Antoni Larazabal", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Sacatepéquez", "MUNICIPIO": "Antigua Guatemala", "MUNICIPIO_UNICO": 1}, {"NO.": 24, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT1BC0591V2", "DIRECCION": "3 avenida A 2-00 zona 1, interior Complejo Deportivo Dr. Pedro Molina Alameda", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Chimaltenango", "MUNICIPIO": "Chimaltenango", "MUNICIPIO_UNICO": 1}, {"NO.": 25, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT1BC0653V2", "DIRECCION": "Calle Cementerio Viejo, Barrio Las Joyas, Guastatoya, El Progreso.", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "El Progreso", "MUNICIPIO": "Guastatoya", "MUNICIPIO_UNICO": 0}, {"NO.": 26, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT1BC0648V2", "DIRECCION": "Calzada Manuel Colom Argueta, Colonia Popular Anexo Escuela U Efrain Barrera, Escuintla", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Escuintla", "MUNICIPIO": "Escuintla", "MUNICIPIO_UNICO": 0}, {"NO.": 27, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT1BC0643V2", "DIRECCION": "1a calle, 5a Ave, entrada Col. Santa Fe, San Antonio, Suchitepequez", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Suchitepéquez", "MUNICIPIO": "San Antonio Suchitepéquez", "MUNICIPIO_UNICO": 1}, {"NO.": 28, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT1BC0650V2", "DIRECCION": "Complejo Deportivo Maya, Santa elene Flores Petén", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Petén", "MUNICIPIO": "Flores", "MUNICIPIO_UNICO": 1}, {"NO.": 29, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT1BC0659V2", "DIRECCION": "Barrio San Miguel, Guazacapan, Santa Rosa.", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Santa Rosa", "MUNICIPIO": "Guazacapán", "MUNICIPIO_UNICO": 1}, {"NO.": 30, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT1BC0645V2", "DIRECCION": "Zaculeo Central zona 9, frente a la pista de aviación, Huehuetenango", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Huehuetenango", "MUNICIPIO": "Huehuetenango", "MUNICIPIO_UNICO": 0}, {"NO.": 31, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT1BC0641V2", "DIRECCION": "Colonia Bosques de Viena, Lote No. 133 zona 2, Jalapa", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Jalapa", "MUNICIPIO": "Jalapa", "MUNICIPIO_UNICO": 0}, {"NO.": 32, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT1BC0587V2", "DIRECCION": "7 avenida y 8 calle final zona 1 Barrio Latino, Jutiapa", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Jutiapa", "MUNICIPIO": "Jutiapa", "MUNICIPIO_UNICO": 1}, {"NO.": 33, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT1BC0656V2", "DIRECCION": "Complejo Deportivo \"Santo Tomas de Castilla\" Puerto Barrios, Izabal", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Izabal", "MUNICIPIO": "Puerto Barrios", "MUNICIPIO_UNICO": 1}, {"NO.": 34, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT1BC0649V2", "DIRECCION": "2da calle 14-51 zona 3 (interior Instituto Experimental Gabriela Arriola Porres) Quetzaltenango", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Quetzaltenango", "MUNICIPIO": "Quetzaltenango", "MUNICIPIO_UNICO": 1}, {"NO.": 35, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT1BC0655V2", "DIRECCION": "Km. 197.5 carretera a Esquipulas, Colonia Los Pinos, Quetzaltepeque, Chiquimula", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Chiquimula", "MUNICIPIO": "Quezaltepeque", "MUNICIPIO_UNICO": 1}, {"NO.": 36, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT1BC0589V2", "DIRECCION": "Complejo Deportivo Retalhuleu, carretera a Pto. Champerico", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Retalhuleu", "MUNICIPIO": "Retalhuleu", "MUNICIPIO_UNICO": 1}, {"NO.": 37, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT1BC0647V2", "DIRECCION": "2da. Avenida 6-89 zona 1, Villa Deportiva, Salama, Baja Verapaz", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Baja Verapaz", "MUNICIPIO": "Salamá", "MUNICIPIO_UNICO": 1}, {"NO.": 38, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT1BC0639V2", "DIRECCION": "5ta. Ave. 2-28 zona 1, Solola,  a la par del rastro municipal.", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Sololá", "MUNICIPIO": "Sololá", "MUNICIPIO_UNICO": 0}, {"NO.": 39, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT1BC0590V2", "DIRECCION": "30 avenida 6-74 zona 4 Mixco, Naranjo", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Mixco", "MUNICIPIO_UNICO": 1}, {"NO.": 40, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT1BC0642V2", "DIRECCION": "Final zona 2, Paraje Parramón, Totonicapán (atrás de la Escuela Normal Regional de Occidente)", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Totonicapán", "MUNICIPIO": "Totonicapán", "MUNICIPIO_UNICO": 1}, {"NO.": 41, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT1BC0597V2", "DIRECCION": "Calzada Rabin Ajau zona 11 Edif. INJAV Coban, Alta Verapaz", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Alta Verapaz", "MUNICIPIO": "Cobán", "MUNICIPIO_UNICO": 0}, {"NO.": 42, "SUCURSAL GENERAL": "GUATEL", "ID": "BCGT01BC0362", "DIRECCION": "GUATEL ZONA 10", "CAPACIDAD CONTRATO": 100, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 43, "SUCURSAL GENERAL": "HOSPITAL NACIONAL DE VILLA NUEVA", "ID": "BCGT01BC0394", "DIRECCION": "55 avenida 12-20 zona 10 de Villa Nueva, Parcelamiento Plan Grande", "CAPACIDAD CONTRATO": 200, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Villa Nueva", "MUNICIPIO_UNICO": 1}, {"NO.": 44, "SUCURSAL GENERAL": "INGECOP", "ID": "BCGT01BC0397", "DIRECCION": "7a. Avenida 29-58 zona 11  Guatemala", "CAPACIDAD CONTRATO": 77, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 45, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0426", "DIRECCION": "DICORER Avenida Reforma 11-50 ZONA 9 (MAGA DICORER)", "CAPACIDAD CONTRATO": 50, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 46, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0427", "DIRECCION": "SEDE DEPARTAMENTAL GUATEMALA (MAGA DICORER) 12 av. 19-01 Zona 1 Flor de Café Guatemala", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 47, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0428", "DIRECCION": "SEDE DEPARTAMENTAL ALTA VERAPAZ (MAGA DICORER) Km.210 Finca Sachamach", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Alta Verapaz", "MUNICIPIO": "Cobán", "MUNICIPIO_UNICO": 0}, {"NO.": 48, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0429", "DIRECCION": "SEDE DEPARTAMENTAL BAJA VERAPAZ (MAGA DICORER) Calle 0-04 Barrio Abajo San Jeronimo Baja Verapaz", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Baja Verapaz", "MUNICIPIO": "San Jerónimo", "MUNICIPIO_UNICO": 1}, {"NO.": 49, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0430", "DIRECCION": "SEDE DEPARTAMENTAL CHIMALTENANGO (MAGA DICORER) 5ta avenida 1-17 zona 4", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Chimaltenango", "MUNICIPIO": "Chimaltenango", "MUNICIPIO_UNICO": 0}, {"NO.": 50, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0431", "DIRECCION": "SEDE DEPARTAMENTAL SACATEPEQUEZ (MAGA DICORER) calle del chajon No. 21, Antigua Guatemala, Sacatepequez", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Sacatepéquez", "MUNICIPIO": "Antigua Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 51, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0432", "DIRECCION": "SEDE DEPARTAMENTAL CHIQUIMULA (MAGA DICORER) 6ta avenida Final Sur, Zona 1 Chiquimula", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Chiquimula", "MUNICIPIO": "Chiquimula", "MUNICIPIO_UNICO": 1}, {"NO.": 52, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0433", "DIRECCION": "SEDE DEPARTAMENTAL EL PROGRESO (MAGA DICORER)Calle  Principal, Lotificación Hichos, Guastatoya, El Progreso", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "El Progreso", "MUNICIPIO": "Guastatoya", "MUNICIPIO_UNICO": 0}, {"NO.": 53, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0434", "DIRECCION": "SEDE DEPARTAMENTAL ESCUINTLA (MAGA DICORER) Kilometro 58, Salida a Santa Lucia Cotzulmalguapa, Escuintla", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Escuintla", "MUNICIPIO": "Escuintla", "MUNICIPIO_UNICO": 0}, {"NO.": 54, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0435", "DIRECCION": "SEDE DEPARTAMENTAL HUEHUETENANGO (MAGA DICORER) 4ta Avenida 10-50 zona 3 Segundo Carrizal, Huehuetenango", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Huehuetenango", "MUNICIPIO": "Huehuetenango", "MUNICIPIO_UNICO": 0}, {"NO.": 55, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0436", "DIRECCION": "SEDE DEPARTAMENTAL IZABAL (MAGA DICORER) 12 calle entre 6a. Y 7a. Avenida Puerto Barrios Izabal", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Izabal", "MUNICIPIO": "Puerto Barrios", "MUNICIPIO_UNICO": 0}, {"NO.": 56, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0437", "DIRECCION": "SEDE DEPARTAMENTAL JUTIAPA (MAGA DICORER) Km. 123.5 Aldea Acequia, El Progreso Jutiapa", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Jutiapa", "MUNICIPIO": "El Progreso", "MUNICIPIO_UNICO": 1}, {"NO.": 57, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0438", "DIRECCION": "SEDE DEPARTAMENTAL POPTUN PETEN (MAGA DICORER) Calle a Cuevas Actun Kan, Santa Elena, Flores Peten", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Petén", "MUNICIPIO": "Flores", "MUNICIPIO_UNICO": 0}, {"NO.": 58, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0439", "DIRECCION": "SEDE DEPARTAMENTAL JALAPA (MAGA DICORER) Lotificacion Los Eucaliptos, Lote No. 30 zona 2 Jalapa", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Jalapa", "MUNICIPIO": "Jalapa", "MUNICIPIO_UNICO": 0}, {"NO.": 59, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0440", "DIRECCION": "SEDE DEPARTAMENTAL QUETZALTENANGO (MAGA DICORER) 4ta calle 21-53 zona 3, Quetzaltenango", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Quetzaltenango", "MUNICIPIO": "Quetzaltenango", "MUNICIPIO_UNICO": 0}, {"NO.": 60, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0441", "DIRECCION": "SEDE DEPARTAMENTAL QUICHÉ (MAGA DICORER) 8a Calle \"A\" entre 4ta y 5ta avenida zona 2 Santa Cruz del Quiche", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Quiché", "MUNICIPIO": "Santa Cruz del Quiché", "MUNICIPIO_UNICO": 0}, {"NO.": 61, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0442", "DIRECCION": "SEDE DEPARTAMENTAL RETALHULEU (MAGA DICORER) Estacion Puca, Calzada las Palmeras zona 6", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Retalhuleu", "MUNICIPIO": "Retalhuleu", "MUNICIPIO_UNICO": 0}, {"NO.": 62, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0443", "DIRECCION": "SEDE DEPARTAMENTAL SACATEPÉQUEZ SAN MARCOS (MAGA DICORER) Km. 243.4 Carretera Interamericana, San Isidro Chamac, San Pedro Sacatepequez San Marcos", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "San Marcos", "MUNICIPIO": "San Pedro Sacatepéquez", "MUNICIPIO_UNICO": 1}, {"NO.": 63, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0444", "DIRECCION": "SEDE DEPARTAMENTAL SANTA ROSA (MAGA DICORER) 3ra calle 1-49, zona 4 Barrio la Parroquia Cuilapa Santa Rosa", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Santa Rosa", "MUNICIPIO": "Cuilapa", "MUNICIPIO_UNICO": 0}, {"NO.": 64, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0445", "DIRECCION": "SEDE DEPARTAMENTAL SOLOLÁ (MAGA DICORER) 5ta avenida 14-93 zona 1, Barrio el Carmen Solola", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Sololá", "MUNICIPIO": "Sololá", "MUNICIPIO_UNICO": 0}, {"NO.": 65, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0446", "DIRECCION": "SEDE DEPARTAMENTAL MAZATENANGO (MAGA DICORER) 7a Avenida 8-22 zona 1 Mazatenango Suchitepequez", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Suchitepéquez", "MUNICIPIO": "Mazatenango", "MUNICIPIO_UNICO": 0}, {"NO.": 66, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0447", "DIRECCION": "SEDE DEPARTAMENTAL TOTONICAPÁN (MAGA DICORER) 11 avenida 2-33 zona 2 Totonicapan", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Totonicapán", "MUNICIPIO": "Totonicapán", "MUNICIPIO_UNICO": 0}, {"NO.": 67, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0448", "DIRECCION": "SEDE DEPARTAMENTAL ZACAPA (MAGA DICORER) Entrada Residenciales Bosques de San Julian", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Zacapa", "MUNICIPIO": "Zacapa", "MUNICIPIO_UNICO": 1}, {"NO.": 68, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0449", "DIRECCION": "EFA JACALTENANGO (MAGA DICORER) Canton San Sebastian, Jacaltenango Huehetenango", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Huehuetenango", "MUNICIPIO": "Jacaltenango", "MUNICIPIO_UNICO": 1}, {"NO.": 69, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0450", "DIRECCION": "EFA COBÁN (MAGA DICORER) Finca Nacional San Jose La Colina Zona 9 Coban Alta Verapaz", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Alta Verapaz", "MUNICIPIO": "Cobán", "MUNICIPIO_UNICO": 0}, {"NO.": 70, "SUCURSAL GENERAL": "MAGA DICORER", "ID": "BCGT01BC0452", "DIRECCION": "EFA SAN MARCOS (MAGA DICORER) Aldea Caxaque, zon 0 San Marcos, Carretera Salida a la Costa", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "San Marcos", "MUNICIPIO": "San Marcos", "MUNICIPIO_UNICO": 0}, {"NO.": 71, "SUCURSAL GENERAL": "MAGA VISAN", "ID": "BCGT01BC0385", "DIRECCION": "7a. Avenida 12-90 Zona 13", "CAPACIDAD CONTRATO": 57, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 72, "SUCURSAL GENERAL": "MAGA VISAN", "ID": "BCGT01BC0484", "DIRECCION": "Kilometro 22, ruta al pacifico", "CAPACIDAD CONTRATO": 30, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Villa Nueva", "MUNICIPIO_UNICO": 0}, {"NO.": 73, "SUCURSAL GENERAL": "MAGA VISAN", "ID": "BCGT01BC0485", "DIRECCION": "3ra calle 6-33 zona 9", "CAPACIDAD CONTRATO": 56, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 74, "SUCURSAL GENERAL": "MAGA VISAN", "ID": "BCGT1BC0657V2", "DIRECCION": "12ª. avenida 19-01, zona 1 Guatemala Edificio Flor del Café", "CAPACIDAD CONTRATO": 57, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 75, "SUCURSAL GENERAL": "MAGA VISAN", "ID": "BCGT1BC0661V2", "DIRECCION": "Km 21.5 Edificio EL ICTA", "CAPACIDAD CONTRATO": 30, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Villa Nueva", "MUNICIPIO_UNICO": 0}, {"NO.": 76, "SUCURSAL GENERAL": "MCD FORTALECIMIENTO DE CULTURA", "ID": "BCGT01BC0547", "DIRECCION": "6ta. AVENIDA 3-38 ZONA 1, CIUDAD GUATEMALA", "CAPACIDAD CONTRATO": 40, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 77, "SUCURSAL GENERAL": "MIDES", "ID": "BCGT01BC0392", "DIRECCION": "5a Avenida 8-78 zona 9, MINISTERIO DE DESARROLLO SOCIAL -MIDES-", "CAPACIDAD CONTRATO": 200, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 78, "SUCURSAL GENERAL": "MPAS", "ID": "BCGT01BC0376", "DIRECCION": "6a avenida 3-45 zona 11, Planta Central Ministerio de Salud Publica y Asistencia Social", "CAPACIDAD CONTRATO": 300, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 79, "SUCURSAL GENERAL": "MPAS", "ID": "BCGT01BC0486", "DIRECCION": "11 avenida \"A\" 11-75, zona 7, colonia La Verbena, DEPARTAMENTO DE PROYECTOS DE LA UNIDAD DE PLANIFICACIÓN ESTRATEGICA SALUD", "CAPACIDAD CONTRATO": 30, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 80, "SUCURSAL GENERAL": "MPAS", "ID": "BCGT01BC0487", "DIRECCION": "5a avenida 11-40, zona 11, colonia El Proreso, DIRECCIÓN DE REGULACIÓN DE LOS PROGRAMAS DE ATENCIÓN A LAS PERSONAS DIRECCIÓN GENERAL DE REGULAMIENTO, VIGILANCIA Y CONTROL DE SALUD (DRPAP de DGRVCS) - MINISTERIO DE SALUD", "CAPACIDAD CONTRATO": 75, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 81, "SUCURSAL GENERAL": "MPAS", "ID": "BCGT01BC0488", "DIRECCION": "11 avenida \"A\" 13-76, zona 7, colonia La Verbena, ALMACEN CENTRAL - MINISTERIO DE SALUD", "CAPACIDAD CONTRATO": 15, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 82, "SUCURSAL GENERAL": "MPAS", "ID": "BCGT01BC0489", "DIRECCION": "9a avenida 14-65, zona 1, SISTEMA INTEGRAL DE ATENCIÓN EN SALUD - MINISTERIO DE SALUD", "CAPACIDAD CONTRATO": 75, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 83, "SUCURSAL GENERAL": "MPAS", "ID": "BCGT01BC0490", "DIRECCION": "2a avenida 0-61, zona 10,DEPARTAMENTO DE REGULACION DE LOS PROGRAMAS DE SALUD Y AMBIENTE DE LA DIRECCION GENERAL DE REGULACION VIGILANCIA Y CONTROL DE LA SALUD - MINISTERIO DE SALUD", "CAPACIDAD CONTRATO": 25, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 84, "SUCURSAL GENERAL": "MPAS", "ID": "BCGT01BC0491", "DIRECCION": "Avenida Bolivar 28-07, zona 8, DIRECCION GENERAL DE REGULACIÓN, VIGILANCIA Y CONTROL DE SALUD (DGRVCS)- MINISTERIO DE SALUD", "CAPACIDAD CONTRATO": 100, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 85, "SUCURSAL GENERAL": "MPAS", "ID": "BCGT1BC0909V2", "DIRECCION": "GUATEL (MSPAS - Bodega, Inventarios y Transportes en la zona 7)", "CAPACIDAD CONTRATO": 20, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 86, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0404", "DIRECCION": "7a calle 2-55 zona 6 Quetzaltenango.", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Quetzaltenango", "MUNICIPIO": "Quetzaltenango", "MUNICIPIO_UNICO": 0}, {"NO.": 87, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0405", "DIRECCION": "3 calle 3-38 zona 5. Santa Cruz Quiche.", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Quiché", "MUNICIPIO": "Santa Cruz del Quiché", "MUNICIPIO_UNICO": 0}, {"NO.": 88, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0406", "DIRECCION": "2a Avenida 5-33 zona 7 Residenciales Imperial, Cobán Alta Verapaz", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Alta Verapaz", "MUNICIPIO": "Cobán", "MUNICIPIO_UNICO": 0}, {"NO.": 89, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0407", "DIRECCION": "4a avenida 1-62 zona 4, Chimaltenago.", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Chimaltenango", "MUNICIPIO": "Chimaltenango", "MUNICIPIO_UNICO": 0}, {"NO.": 90, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0408", "DIRECCION": "4a Calle \"A\" 2-21, zona 3. Colonia San Francisco, Chiquimula.", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Chiquimula", "MUNICIPIO": "Chiquimula", "MUNICIPIO_UNICO": 0}, {"NO.": 91, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0409", "DIRECCION": "Barrio el Bordo, las Joyas. Guastatoya El Progreso (dos casas a la Izquierda del Instituto de Estadistica).", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "El Progreso", "MUNICIPIO": "Guastatoya", "MUNICIPIO_UNICO": 0}, {"NO.": 92, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0410", "DIRECCION": "4a avenida final 1-40 zona 3. Salida al Puerto de San José, Escuintla, Escuintla (al lado de Panadely)", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Escuintla", "MUNICIPIO": "Escuintla", "MUNICIPIO_UNICO": 0}, {"NO.": 93, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0411", "DIRECCION": "1a avenida 0-31 zona 6 Barrio Chipilapa, Jalapa.", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Jalapa", "MUNICIPIO": "Jalapa", "MUNICIPIO_UNICO": 0}, {"NO.": 94, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0412", "DIRECCION": "7 a calle 1-61 zona 1 Retalhuleu.", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Retalhuleu", "MUNICIPIO": "Retalhuleu", "MUNICIPIO_UNICO": 0}, {"NO.": 95, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0413", "DIRECCION": "8a calle \"C\" 8-57 Zona 2, Municipio de San Marcos.", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "San Marcos", "MUNICIPIO": "San Marcos", "MUNICIPIO_UNICO": 0}, {"NO.": 96, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0414", "DIRECCION": "6a avenida 5-66 zona 1 Edificio El Sexteo 2o Nivel.", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 97, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0415", "DIRECCION": "6a avenida \"A\" 20-27 Zona 1, Ciudad de Guatemala.", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 98, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0416", "DIRECCION": "2 avenida 12-50, Colonia Bella Aurora, zona 14. 14°35'01.7\"N 90°31'13.5\"W", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 99, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0417", "DIRECCION": "6a Calle 5-41 zona 1 Villa Nueva (atrás de Pollo Campero)", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Villa Nueva", "MUNICIPIO_UNICO": 0}, {"NO.": 100, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0418", "DIRECCION": "8a Avenida 4-22, casa #26, Sector A3, Zona 8 de Mixco. Colinas de San Cristobal II, Ciudad de San Cristobal.", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Mixco", "MUNICIPIO_UNICO": 0}, {"NO.": 101, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0419", "DIRECCION": "41 calle 3-45, zona 8. Ciudad de Guatemala (Unidad de Desarrollo de Personal, Direccion de Delegaciones y PNA Denuncias).", "CAPACIDAD CONTRATO": 30, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 102, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0420", "DIRECCION": "Avenida Simeón Cañas, 10-71 zona 2. Ciudad de Guatemala Edificio del Modelo de Atencio Integral de Niñez y Adolescencia (MAINA)", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 103, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0462", "DIRECCION": "8a avendia 3-95 zona 1 Barrio El Centro, Salamá Baja Verapaz (a 1/2 Cuadra de la Iglesia del Nazareno Cental).", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Baja Verapaz", "MUNICIPIO": "Salamá", "MUNICIPIO_UNICO": 0}, {"NO.": 104, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0463", "DIRECCION": "5a calle 2-50 zona 3 Barrio San Francisco, Coatepeque.", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Quetzaltenango", "MUNICIPIO": "Coatepeque", "MUNICIPIO_UNICO": 1}, {"NO.": 105, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0464", "DIRECCION": "11 calle 3-63, Zona 1 Barrio 3 de Abril, San Benito, Petén (frente al Antiaguo Salón Suchilma)", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Petén", "MUNICIPIO": "San Benito", "MUNICIPIO_UNICO": 0}, {"NO.": 106, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0465", "DIRECCION": "2a calle 3-54 zona 8 Colonia Hernandez (Calle Hopodromo), Huehuetenango", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Huehuetenango", "MUNICIPIO": "Huehuetenango", "MUNICIPIO_UNICO": 0}, {"NO.": 107, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0466", "DIRECCION": "18 av. Entre 9na y 10ma Calle, Barrio Esperanza, Puerto Barrios Izabal.", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Izabal", "MUNICIPIO": "Puerto Barrios", "MUNICIPIO_UNICO": 0}, {"NO.": 108, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0467", "DIRECCION": "8a avenida 7-78 zona 1, Barrio Latina, Jutiapa (frente al MP investigaciones)", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Jutiapa", "MUNICIPIO": "Jutiapa", "MUNICIPIO_UNICO": 0}, {"NO.": 109, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0468", "DIRECCION": "4 Calle Poniente No. 2 Portal del Ayuntamiento, Antigua, Guatemala.", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Sacatepéquez", "MUNICIPIO": "Antigua Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 110, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0469", "DIRECCION": "9a avenida 11-86, zona 2, Barrio San Bartolo Sololá.", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Sololá", "MUNICIPIO": "Sololá", "MUNICIPIO_UNICO": 0}, {"NO.": 111, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0470", "DIRECCION": "8 av. 10 calle casa 7 Colonia Flor del Café zona 2. Mazatenango Suchitepequez.", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Suchitepéquez", "MUNICIPIO": "Mazatenango", "MUNICIPIO_UNICO": 0}, {"NO.": 112, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0471", "DIRECCION": "10a avenida y 10a. Calle zona 1, Barrio el Bordo, La Laguna Zacapa.", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Zacapa", "MUNICIPIO": "Zacapa", "MUNICIPIO_UNICO": 0}, {"NO.": 113, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0472", "DIRECCION": "4a calle 2-29, zona 3. Barrio La Parroquia, Colonia China, Cuilapa, Santa Rosa.", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Santa Rosa", "MUNICIPIO": "Cuilapa", "MUNICIPIO_UNICO": 0}, {"NO.": 114, "SUCURSAL GENERAL": "PGN", "ID": "BCGT01BC0521", "DIRECCION": "2a calle 14 - 13 zona 2 de Totonicapán. 14°54'46.0\"N 91°21'50.8\"W.", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Totonicapán", "MUNICIPIO": "Totonicapán", "MUNICIPIO_UNICO": 0}, {"NO.": 115, "SUCURSAL GENERAL": "PGN", "ID": "BCGT1BC0886V2", "DIRECCION": "Lote A-5 Lotificación Lomas de Pamplona 4ta Av. 8-76 Colonia Lomas de pamplona", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 116, "SUCURSAL GENERAL": "PGN", "ID": "BCGT1BC0887V2", "DIRECCION": "30 calle 25-38 zona 5, Ofibodega #2, Complejo Ofibodegas, Colonia San Pedrito", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 117, "SUCURSAL GENERAL": "PGN", "ID": "BCGT1BC0712V2", "DIRECCION": "3ra. Avenida 6-105, Zona 1, San Isidro, Malacatán, San Marcos.", "CAPACIDAD CONTRATO": 10, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "San Marcos", "MUNICIPIO": "Malacatán", "MUNICIPIO_UNICO": 1}, {"NO.": 118, "SUCURSAL GENERAL": "SUBSECRETARIA DE PROTECCION Y ACOGIMIENTO A LA NIÑEZ Y ADOLESCENCIA", "ID": "BCGT01BC0622", "DIRECCION": "Edificio Cortez 5 avenida y 12 calle zona 9", "CAPACIDAD CONTRATO": 40, "TIPO": "CON EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 119, "SUCURSAL GENERAL": "GAE", "ID": "BCGT01BC0377", "DIRECCION": "COMISIÓN PRESIDENCIAL DE GOBIERNO ABIERTO Y ELECTRONICO 4a calle 6-17 zona 1 Guatemala", "CAPACIDAD CONTRATO": 100, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 120, "SUCURSAL GENERAL": "COPADEH", "ID": "BCGT01BC0563", "DIRECCION": "COMISION PRESIDENCIAL POR LA PAZ Y LOS DERECHOS HUMANOS - COPADEH-,   8ta calle 5ta avenida zona 9 ingreso puerta 1 salon 2 COPEREX (Parque de la Industria)", "CAPACIDAD CONTRATO": 30, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 121, "SUCURSAL GENERAL": "CONAP", "ID": "BCGT01BC0372", "DIRECCION": "CONSEJO NACIONAL DE ÁREAS PROTEGIDAS CONAP 5ta avenida 6-06 zona 1 Edificio IPM 5to, 6to, 7mo. Y 9no nivel", "CAPACIDAD CONTRATO": 150, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 122, "SUCURSAL GENERAL": "DIGECAM", "ID": "BCGT01BC0543", "DIRECCION": "12 avenida 31-09 zona 5DIRECCION GENERAL DE ARMAS Y MUNICIONES - DIGECAM - REDUNDANCIA", "CAPACIDAD CONTRATO": 50, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 123, "SUCURSAL GENERAL": "DIGEF", "ID": "BCGT01BC0525", "DIRECCION": "DIGEF REDUNDANCIA 32 calle 9-10 zona 11 Colonia Granai, Guateamala", "CAPACIDAD CONTRATO": 100, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 124, "SUCURSAL GENERAL": "FIUSAC", "ID": "BCGT01BC0371", "DIRECCION": "Edificio T-4 Ciudad Universitaria Z. 12", "CAPACIDAD CONTRATO": 160, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 125, "SUCURSAL GENERAL": "FONTIERRAS", "ID": "BCGT01BC0369", "DIRECCION": "7a avenida 8-92, zona 9, Guatemala", "CAPACIDAD CONTRATO": 75, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 126, "SUCURSAL GENERAL": "INSTITUTO DE LA VICTIMA", "ID": "BCGT1BC0635V2", "DIRECCION": "6ta calle 6-37 zona 3 de Cobán, Alta Verapaz", "CAPACIDAD CONTRATO": 50, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Alta Verapaz", "MUNICIPIO": "Cobán", "MUNICIPIO_UNICO": 0}, {"NO.": 127, "SUCURSAL GENERAL": "INSTITUTO DE LA VICTIMA", "ID": "BCGT01BC0670", "DIRECCION": "21 avenida lote 3 sección B-20 zona 4 Municipio de Escuintla, Departamento de Escuintla.", "CAPACIDAD CONTRATO": 30, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Escuintla", "MUNICIPIO": "Escuintla", "MUNICIPIO_UNICO": 0}, {"NO.": 128, "SUCURSAL GENERAL": "INSTITUTO DE LA VICTIMA", "ID": "BCGT1BC0580V2", "DIRECCION": "Diagonal 1, 7-14 zona 3 Jutiapa, Jutiapa.", "CAPACIDAD CONTRATO": 30, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Jutiapa", "MUNICIPIO": "Jutiapa", "MUNICIPIO_UNICO": 0}, {"NO.": 129, "SUCURSAL GENERAL": "IGM", "ID": "BCGT01BC0378", "DIRECCION": "6ta Avenida 3-11 zona 4", "CAPACIDAD CONTRATO": 50, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 130, "SUCURSAL GENERAL": "MINEX", "ID": "BCGT01BC0548", "DIRECCION": "11 Avenida 4-07, zona 1, edificio Rivera, 2do nivel oficina 206,  Quetzaltenango MINEX", "CAPACIDAD CONTRATO": 10, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Quetzaltenango", "MUNICIPIO": "Quetzaltenango", "MUNICIPIO_UNICO": 0}, {"NO.": 131, "SUCURSAL GENERAL": "MINEX", "ID": "BCGT01BC0549", "DIRECCION": "5ta Avenida \"A\" 5-75 colonia El Centro, zona 1, Huehuetenango MINEX", "CAPACIDAD CONTRATO": 10, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Huehuetenango", "MUNICIPIO": "Huehuetenango", "MUNICIPIO_UNICO": 0}, {"NO.": 132, "SUCURSAL GENERAL": "MINEX", "ID": "BCGT01BC0550", "DIRECCION": "4ta Avenida 6-01, calle La Ronda, zona 1, Edificio de Gobernación Departamental, Jutiapa MINEX", "CAPACIDAD CONTRATO": 10, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Jutiapa", "MUNICIPIO": "Jutiapa", "MUNICIPIO_UNICO": 0}, {"NO.": 133, "SUCURSAL GENERAL": "MINEX", "ID": "BCGT1BC0669V2", "DIRECCION": "1ra calle 1-36 zona 1, Ciudad de Tecun Uman, municipio de Ayutla", "CAPACIDAD CONTRATO": 10, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "San Marcos", "MUNICIPIO": "Ayutla", "MUNICIPIO_UNICO": 0}, {"NO.": 134, "SUCURSAL GENERAL": "MINTRAB", "ID": "BCGT01BC0368", "DIRECCION": "7a avenida 3-33 zona 9-", "CAPACIDAD CONTRATO": 450, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 135, "SUCURSAL GENERAL": "PGN", "ID": "BCGT1BC0711V2", "DIRECCION": "15 Avenida 9-69, Zona 13, Ciudad Guatemala. Oficinas Centrales.", "CAPACIDAD CONTRATO": 50, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 136, "SUCURSAL GENERAL": "SCEP", "ID": "BCGT01BC0373", "DIRECCION": "PRINCIPAL 5ta avenida 6-06 zona 1 Edificio IPM Tercer Nivel", "CAPACIDAD CONTRATO": 30, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 137, "SUCURSAL GENERAL": "SCEP", "ID": "BCGT01BC0374", "DIRECCION": "32 Calle 8-00 zona 11, Colonia las Charcas, Archivo Genral de la Secretaria de Coordinacion Ejecutiva de la Presidencia.", "CAPACIDAD CONTRATO": 2, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 138, "SUCURSAL GENERAL": "MICIVI", "ID": "BCGT01BC0367", "DIRECCION": "OFICINAS DE LA DIRECCION SUPERIOR DEL MINISTERIO DE COMUNICACIONES, INFRAESTRUCTURA Y VIVIENDA -CIV-, ZONA 13, CIUDAD DE GUATEMALA (MICIVI)", "CAPACIDAD CONTRATO": 31, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 139, "SUCURSAL GENERAL": "HOSPITAL NACIONAL DE VILLA NUEVA", "ID": "BCGT1BC0792V2", "DIRECCION": "Hospital De Villa Nueva - Enlace Redundante", "CAPACIDAD CONTRATO": 95, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Villa Nueva", "MUNICIPIO_UNICO": 0}, {"NO.": 140, "SUCURSAL GENERAL": "IGM", "ID": "BCGT1BC0794V2", "DIRECCION": "6ta Avenida 3-11 zona 4", "CAPACIDAD CONTRATO": 50, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 141, "SUCURSAL GENERAL": "FONTIERRAS", "ID": "BCGT1BC0801V2", "DIRECCION": "Fondo de Tierras - Redundante", "CAPACIDAD CONTRATO": 15, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 142, "SUCURSAL GENERAL": "COPADEH", "ID": "BCGT1BC0885V2", "DIRECCION": "15 Avenida 13-41 zona 13,Guatemala", "CAPACIDAD CONTRATO": 25, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 143, "SUCURSAL GENERAL": "INSTITUTO DE LA VICTIMA", "ID": "BCGT1BC0888V2", "DIRECCION": "3ra Avenida 16-31 zona 10,Guatemala          COORDENADS   14.594735  -90.514403", "CAPACIDAD CONTRATO": 120, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 144, "SUCURSAL GENERAL": "INSTITUTO DE LA VICTIMA", "ID": "BCGT1BC0890V2", "DIRECCION": "20 calle 8-00 colonia San Francisco I, zona 6 de Mixco", "CAPACIDAD CONTRATO": 25, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Mixco", "MUNICIPIO_UNICO": 0}, {"NO.": 145, "SUCURSAL GENERAL": "INSTITUTO DE LA VICTIMA", "ID": "BCGT1BC0634V2", "DIRECCION": "6ta calle 6-37 zona 3 de Cobán, Alta Verapaz", "CAPACIDAD CONTRATO": 50, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Alta Verapaz", "MUNICIPIO": "Cobán", "MUNICIPIO_UNICO": 0}, {"NO.": 146, "SUCURSAL GENERAL": "INSTITUTO DE LA VICTIMA", "ID": "BCGT1BC0579V2", "DIRECCION": "Diagonal 1, 7-14 zona 3 Jutiapa, Jutiapa.", "CAPACIDAD CONTRATO": 30, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Jutiapa", "MUNICIPIO": "Jutiapa", "MUNICIPIO_UNICO": 0}, {"NO.": 147, "SUCURSAL GENERAL": "INSTITUTO DE LA VICTIMA", "ID": "BCGT01BC0663", "DIRECCION": "21 avenida lote 3 sección B-20 zona 4 Municipio de Escuintla, Departamento de Escuintla.", "CAPACIDAD CONTRATO": 30, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Escuintla", "MUNICIPIO": "Escuintla", "MUNICIPIO_UNICO": 0}, {"NO.": 148, "SUCURSAL GENERAL": "MPAS", "ID": "BCGT1BC0910V2", "DIRECCION": "6a avenida 3-45 zona 11, Planta Central Ministerio de Salud Publica y Asistencia Social", "CAPACIDAD CONTRATO": 300, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 149, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "2025654001", "DIRECCION": "3ª. avenida 2-34 zona 1, del municipio de Jutiapa, departamento de Jutiapa y coordenadas, 14°17'26.0\"N 89°53'36.3\"W", "CAPACIDAD CONTRATO": 10, "TIPO": "", "DEPARTAMENTO": "Jutiapa", "MUNICIPIO": "Jutiapa", "MUNICIPIO_UNICO": 0}, {"NO.": 150, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "2025654002", "DIRECCION": "7ª. avenida entre 12 y 13 calle, del municipio de Puerto Barrios del departamento de Izabal. Ubicado en “Plaza Elizabeth” 2º. Nivel, módulo 206 y coordenadas 15°43'45.2\"N 88°35'56.0\"W.", "CAPACIDAD CONTRATO": 10, "TIPO": "", "DEPARTAMENTO": "Izabal", "MUNICIPIO": "Puerto Barrios", "MUNICIPIO_UNICO": 0}, {"NO.": 151, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "2025654004", "DIRECCION": "KM 33.5 CARRETERA A ANTIGUA GUATEMALA,GRANJA SANTA MONICA", "CAPACIDAD CONTRATO": 10, "TIPO": "", "DEPARTAMENTO": "Sacatepéquez", "MUNICIPIO": "Santa Lucía Milpas Altas", "MUNICIPIO_UNICO": 1}, {"NO.": 152, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "2025654003", "DIRECCION": "1a. calle 1-07 zona1, Barrio el Salvador, del municipio de San Cristóbal, departamento de Totonicapán", "CAPACIDAD CONTRATO": 10, "TIPO": "", "DEPARTAMENTO": "Totonicapán", "MUNICIPIO": "San Cristóbal Totonicapán", "MUNICIPIO_UNICO": 1}, {"NO.": 153, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "2025654005", "DIRECCION": "Ruta principal entrada a Salama, local No. 1 aldea San Juan, municipio Salamá, departamento de Baja Verapaz.", "CAPACIDAD CONTRATO": 10, "TIPO": "", "DEPARTAMENTO": "Baja Verapaz", "MUNICIPIO": "Salamá", "MUNICIPIO_UNICO": 0}, {"NO.": 154, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "2025654006", "DIRECCION": "Calle principal caserio El Ceibo, municipio La Libertad, departamento de Petén.", "CAPACIDAD CONTRATO": 10, "TIPO": "", "DEPARTAMENTO": "Petén", "MUNICIPIO": "La Libertad", "MUNICIPIO_UNICO": 1}, {"NO.": 155, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "2025654007", "DIRECCION": "29 avenida 8-01 zona 7, del municipio de Quetzaltenango, departamento Quetzaltenango y coordenadas 14°51'26.2\"N 91°31'17.3\"W", "CAPACIDAD CONTRATO": 10, "TIPO": "", "DEPARTAMENTO": "Quetzaltenango", "MUNICIPIO": "Quetzaltenango", "MUNICIPIO_UNICO": 0}, {"NO.": 156, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "2025654008", "DIRECCION": "Colonia Maria Teresa, casa número 2, segundo nivel, zona 5, municipio de Retalhuleu, Departamento de Retalhuleu", "CAPACIDAD CONTRATO": 10, "TIPO": "", "DEPARTAMENTO": "Retalhuleu", "MUNICIPIO": "Retalhuleu", "MUNICIPIO_UNICO": 0}, {"NO.": 157, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "2025654009", "DIRECCION": "6ta avenida 1-30 zona 1, barrio Santiaguito, municipio de Esquipulas, departamento de Chiquimula", "CAPACIDAD CONTRATO": 10, "TIPO": "", "DEPARTAMENTO": "Chiquimula", "MUNICIPIO": "Esquipulas", "MUNICIPIO_UNICO": 1}, {"NO.": 158, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "101023525001", "DIRECCION": "Calle principal, a un costado del parque municipal, dentro del edificio de la municipalidad, segundo nivel, del municipio de Chisec, departamento de Alta Verapaz.", "CAPACIDAD CONTRATO": 10, "TIPO": "", "DEPARTAMENTO": "Alta Verapaz", "MUNICIPIO": "Chisec", "MUNICIPIO_UNICO": 1}, {"NO.": 159, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "101023525002", "DIRECCION": "Caserío Caserío El Rodeíto de la aldea Cantón Centro, del municipio de Concepción las Minas, departamento de Chiquimula.El Rodeíto de la aldea Cantón Centro, del municipio de Concepción las Minas, departamento de Chiquimula.", "CAPACIDAD CONTRATO": 10, "TIPO": "", "DEPARTAMENTO": "Chiquimula", "MUNICIPIO": "Concepción Las Minas", "MUNICIPIO_UNICO": 1}, {"NO.": 160, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "101023525003", "DIRECCION": "Barrio el Trébol, zona 5, municipio de Tacaná, departamento de San Marcos", "CAPACIDAD CONTRATO": 10, "TIPO": "", "DEPARTAMENTO": "San Marcos", "MUNICIPIO": "Tacaná", "MUNICIPIO_UNICO": 1}, {"NO.": 161, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "101023525004", "DIRECCION": "Cantón Rosario, Centro Comercial, local 1, a dos cuadras del parque, en el municipio de Santa Eulalia, departamento de Huehuetenango.", "CAPACIDAD CONTRATO": 10, "TIPO": "", "DEPARTAMENTO": "Huehuetenango", "MUNICIPIO": "Santa Eulalia", "MUNICIPIO_UNICO": 1}, {"NO.": 162, "SUCURSAL GENERAL": "HOSPITAL DE ESCUINTLA", "ID": "-", "DIRECCION": "Km 59.5 Carretera Taxisco, Escuintla", "CAPACIDAD CONTRATO": 200, "TIPO": "", "DEPARTAMENTO": "Escuintla", "MUNICIPIO": "Escuintla", "MUNICIPIO_UNICO": 0}, {"NO.": 163, "SUCURSAL GENERAL": "CONAMIGUA", "ID": "101023525005", "DIRECCION": "3ra calle 2-18  zona 1 municipio de Salcajá, departamento de Quetzaltenango", "CAPACIDAD CONTRATO": 10, "TIPO": "", "DEPARTAMENTO": "Quetzaltenango", "MUNICIPIO": "Salcajá", "MUNICIPIO_UNICO": 1}, {"NO.": 164, "SUCURSAL GENERAL": "DIGEF", "ID": "5004122007", "DIRECCION": "Escuela de Educación Física. Complejo Deportivo zona 4, Zacapa.     14.9526714419847   -89.5235523057483", "CAPACIDAD CONTRATO": 10, "TIPO": "", "DEPARTAMENTO": "Zacapa", "MUNICIPIO": "Zacapa", "MUNICIPIO_UNICO": 0}, {"NO.": 165, "SUCURSAL GENERAL": "DIGEF", "ID": "5004122008", "DIRECCION": "Escuela de Educación Física. 2a. Ave. Y 11 calle zona 1, San marcos (Interior de la Escuela tipo Federación Ulises Rojas).    14.9660089890324 -91.7893807900082", "CAPACIDAD CONTRATO": 10, "TIPO": "", "DEPARTAMENTO": "San Marcos", "MUNICIPIO": "San Marcos", "MUNICIPIO_UNICO": 0}, {"NO.": 166, "SUCURSAL GENERAL": "INSTITUTO DE LA VICTIMA", "ID": "BCGT1BC0888V2", "DIRECCION": "3ra Avenida 16-31 zona 10,Guatemala          COORDENADS   14.594735  -90.514403", "CAPACIDAD CONTRATO": 120, "TIPO": "SIN EQUIPO", "DEPARTAMENTO": "Guatemala", "MUNICIPIO": "Guatemala", "MUNICIPIO_UNICO": 0}, {"NO.": 167, "SUCURSAL GENERAL": "INSTITUTO DE LA VICTIMA", "ID": "", "DIRECCION": "INSTITUTO DE LA VICTIMA   QUETZALTENANGO, 29 avenida A 9-95, zona 3 Quetzaltenango", "CAPACIDAD CONTRATO": 60, "TIPO": "", "DEPARTAMENTO": "Quetzaltenango", "MUNICIPIO": "Quetzaltenango", "MUNICIPIO_UNICO": 0}, {"NO.": 168, "SUCURSAL GENERAL": "INSTITUTO DE LA VICTIMA", "ID": "", "DIRECCION": "INSTITUTO DE LA VICTIMA   QUETZALTENANGO, 29 avenida A 9-95, zona 3 Quetzaltenango", "CAPACIDAD CONTRATO": 60, "TIPO": "", "DEPARTAMENTO": "Quetzaltenango", "MUNICIPIO": "Quetzaltenango", "MUNICIPIO_UNICO": 0}, {"NO.": 169, "SUCURSAL GENERAL": "INSTITUTO DE LA VICTIMA", "ID": "", "DIRECCION": "INSTITUTO DE LA VICTIMA   SUCHITEPEQUEZ, Residenciales Villas de Concepción, calle de Las Bougambilias, lotes 35, 36, 37, 38 y 39, San Antonio Suchitepequez", "CAPACIDAD CONTRATO": 50, "TIPO": "", "DEPARTAMENTO": "Suchitepéquez", "MUNICIPIO": "San Antonio Suchitepéquez", "MUNICIPIO_UNICO": 0}, {"NO.": 170, "SUCURSAL GENERAL": "INSTITUTO DE LA VICTIMA", "ID": "", "DIRECCION": "INSTITUTO DE LA VICTIMA   SUCHITEPEQUEZ, Residenciales Villas de Concepción, calle de Las Bougambilias, lotes 35, 36, 37, 38 y 39, San Antonio Suchitepequez", "CAPACIDAD CONTRATO": 50, "TIPO": "", "DEPARTAMENTO": "Suchitepéquez", "MUNICIPIO": "San Antonio Suchitepéquez", "MUNICIPIO_UNICO": 0}], "paths": [{"dept": "Quiché", "class": "st1", "d": "M341,248.8l56.6,0.1l4.2-1l1.8,1.6l-0.5,3.7l-3.7,2.7l-2-0.9l-2.2,1.4l-4.2-0.5l-1.5,1.5l-3.6-2.4l-1.7-2.9     l-1.6,1.4l-1.6-1.6l-2.9,0.6l-4.8,2.6l0.9,1.6l-2,3.2l-1.1-1.6l-4.5,2.4l3,3.1l-1.9,2.5l-1.1,3.9l2.8,0.3l0.6,2l-1.2,2.3l-2.7,1     l-1.9,4.8l-3.7,5.5h2.7l1.8,1.6l-1.6,1.6l2.3,1.7l-1.9,2.4l0.8,1.1l4.2,0.8l6.1,2.1l2.9-0.5l0.1,1.4l3.2,2.8l-0.9,3.6l1.7,1.2     l3.2,6.5l-0.7,1.4l-5,4.4l0.9,2l-5.8,1.2l-2,2.6l0.8,3.8l2.3,2.3l3.5,1.4l17.5,2.7l1.8,1l-0.1,2.4l-2.8,5.7l-4.2,5.8l-3.7,0.3     l-13.1-0.6l-18.5-4.4l-0.9-0.5l-0.7,12.6l8.3,10.9l10.1,6.4l-0.6,3.1l4.3,4l1.7,4.1l-10.7-2.8h-5.8l-5.3-1.6l-4.6,0.5l-9.3-0.2     l-5.3,2.5l-3.2,8.3l-3.8,2.1l-1.8-0.6l-1.4,2.6l-1.7-0.6l1.5-5.3l-4.2-1.7l-1.6-3.5l-1.4-0.7l-3.5-2.8l0.9-2.7l-2.2-2.7l-1.8-4.3     l-3.2-2.3l-0.3-2.1l1.5-2l2.3-0.4l0.7-2.5l-1.5-1.6l-1.8-5.5l-5.7-5.2l-0.6-1.8l0.6-5.4l1.4-1.6l7.4-1.7h6.5l-1.3-4.7l0.7-6.3     l-4.5-1.8l-4.3,0.3l-3.4-3.9l-0.9-3.9l-2.2-2.8l-1.1-3.2l1.2-5l2.1-5.9l4.9-1.9l7.5-7l7.3-14.8L341,248.8z"}, {"dept": "Petén", "class": "st2", "d": "M401.8,247.8l1.5-3.2l-2.3,0.9l-0.4-2l2.7-2.2l-1.4-2.1l2.4-1l-3.9-3.1l0.3-3.8l2.7-1.7l-2.6-1.4l1.1-2.5     l2.3,0.9l-1.5-2.5l2.3-1.3l-2.8-1.4l2.9-1.1l2.3-3.5l-1.1-2.8l3.2,0.6l-1.6-6.1L405,209l-6.1-1.8l-0.7-3l-2.9-1.7l-2.7,1.3     l-1.2-3.5l-4.5,1.2l-5.4-0.3l2.3-4.1l-3.9-1.3l1.6-7.3l-1.5-0.9l-2.2,1.5l1.5-3.4l-1.5-4.2l-7.5-11l-7.2-4.7l0.4-2.2h-3.9     l-7.6-2.4l-5.2-4.5l-2.3-1.2l1.5-2.8l-3.4-0.3l-0.8,3.1l-2.6-2.4l-5.5-2.7l-1.1-3.6l-3.9-4.8l-1-3.2l-5.5-1.2l-3.9-4.4l-2-4.9     l-3.7-2l-1.3-4.6l-2.2-2.9l-8.2-0.1l-0.9-2.8l-7.7-2.9l1.3-2l48.5,0.6l0.3-64.1l3.2-1.6L544,45.8l1.4,57.5l0.4,33.2l-3.6,63     l-2.5,36l-2.7,27l-0.2,5.7l-3.3-1l-10.3,0.3l-2.5,4.9l-1.7,1.2l-5.6,1.4l-1.9-1l-5.5,1.7l-0.3-6.1l-5.5,0.4l-7.7-0.9l-2.4,1.5     l-2.6-0.6l-7-4.5l-3.6,0.6l-1.9,1.6l-7.5-0.4l-3.2-5.5l-7.8-2.5l-0.3-2.7l-3.2,1.5l-3-2.1l-3.6,1.1l-18.9-6.1l-22.7-3.5     L401.8,247.8z"}, {"dept": "Huehuetenango", "class": "st3", "d": "M216.9,319.7l40-68.6l3.1-2.6l81,0.3l-14.8,29.6l-7.3,14.8l-7.5,7l-4.9,1.9l-2.1,5.9l-1.2,5l1.1,3.2l2.2,2.8     l0.9,3.9l3.4,3.9l4.3-0.3l4.5,1.8l-0.7,6.3l1.3,4.7h-6.5l-7.4,1.7l-1.4,1.6l-2.9-0.2l-5.8,2.8l-5.9,1.4l-3.2,4.4l-0.3,3.3     l-4.6,0.7l-3.3-5.7l-7.5-2l-0.6-1.6l-4.4-3.8l-3.9-4.9l-2.2-4.9l-7.8,1.7l-2.3-0.2l-4.8-2.9l-6.8,3.6l-5.2,1.2l-4.1,4.7l-5.7-0.3     l-1.3-1l-1.3-13.8l-3.6-3.1L216.9,319.7z"}, {"dept": "Quetzaltenango", "class": "st4", "d": "M271.4,347.3l7.5,2l3.3,5.7l-7.7,2.8l-0.2,4.6l3.1,12.3l2.7,2.8L280,381l2.1,2.6l5.3-0.1l1.3,5.7l3.4,5.1     l-1.4,4.6l-3.3,4.5l-4.6,3.1l-3.8-0.7l-3.5,2.1l-2.8-0.8l-3.2,3.5l-2-0.5l-2,2.1l-3.8-1.2l2-5.9l-1.3-2l-3.5,3l-4,2l-2.3,5.5     l-2,3l-1.8,5l-4.6,6.6l-4.7,1l-4.5,0.1l-7-3l-1.8,0.9l-3.6-10l-7.8-1.2l-1.6-1.9l3.9-4.4l3.1-2.4l13.6-3.9l11.3,0.9l2.1-1.1     l1.4-2.7l2.7-2.5l4.5-9l2.2-8.5l5.1-4.2l1.3-2.4l0.7-5l-2.6-3.7l-1.3-3.2l1-3.5l4.2-5.4l4.6-3.9L271.4,347.3z"}, {"dept": "Retalhuleu", "class": "st5", "d": "M265.8,475.9l-11.6-7.4L238,456.3l-15.8-14.6l-12.6-9.4l3.2-0.5l2-1.7l4.4,0.4l2.4-1.9l4.3-1.3l1.8-0.9l7,3     l4.5-0.1l4.7-1l4.6-6.6l1.8-5l2-3l2.3-5.5l4-2l3.5-3l1.3,2l-2,5.9l3.8,1.2l2-2.1l2,0.5l3.2-3.5l2.8,0.8l3.5-2.1l3.8,0.7l-3.4,3     l-3.2,4v4.3l-4.5,9.1l-0.9,8.3l1.9,5.3l-0.6,10.4l-2.7,6.2l-1.1,8.3l-3.2,4.8L265.8,475.9z"}, {"dept": "San Marcos", "class": "st6", "d": "M271.4,347.3l-0.5,2.2l-4.6,3.9l-4.2,5.4l-1,3.5l1.3,3.2l2.6,3.7l-0.7,5l-1.3,2.4l-5.1,4.2l-2.2,8.5l-4.5,9     l-2.7,2.5l-1.4,2.7l-2.1,1.1l-11.3-0.9l-13.6,3.9L217,410l-3.9,4.4l1.6,1.9l7.8,1.2l3.6,10l-4.3,1.3l-2.4,1.9l-4.4-0.4l-2,1.7     l-3.2,0.5l-9.3-7l2.3-0.3l2-2.4l2.6-6.9l2.4-4.4l0.3-4l-1.9-5.8v-3.5l-1.3-3.9l0.5-3.8l2.3-2.7l1.3-3.5l-0.3-7.2l0.4-3.8l1.3-1.3     l4.3-1.2l3.4-6.5l-14.3-19.2L205,343l0.7-4.2l11.2-19.2l0.7,2.5l3.6,3.1l1.3,13.8l1.3,1l5.7,0.3l4.1-4.7l5.2-1.2l6.8-3.6l4.8,2.9     l2.3,0.2l7.8-1.7l2.2,4.9l3.9,4.9l4.4,3.8L271.4,347.3z"}, {"dept": "Baja Verapaz", "class": "st7", "d": "M378.3,384.7l-1.7-4.1l-4.3-4l0.6-3.1l-10.1-6.4l-8.3-10.9l0.7-12.6l0.9,0.5l18.5,4.4l13.1,0.6l3.7-0.3     l4.2-5.8l11.5,0.1l2.4,0.8l7.3,5.4l1.9-0.5l3.1-3.8l1.4-5.1l2.3-0.7l5.4,1.3l12.2,1.7l4.4-0.2l4.7-1.7l5-0.5l3.4,2.5l0.4,2.3     l-1.2,3.4l-4.9,7.2l-3,1.7l-13.9,9.4l-17.7,12.5l-2.3,7.6l-5.7,0.9l-3.7-0.7l-1.4-1.3l-1.3-2.1l-3.5,2.3l-3.9,0.3l-1.4-1.6     l-5.5,2.1l-6.2,0.8L378.3,384.7z"}, {"dept": "Alta Verapaz", "class": "st8", "d": "M454.8,355.3l4.9-7.2l1.2-3.4l-0.4-2.3l-3.4-2.5l-5,0.5l-4.7,1.7l-4.4,0.2l-12.2-1.7l-5.4-1.3l-2.3,0.7     l-1.4,5.1l-3.1,3.8l-1.9,0.5l-7.3-5.4l-2.4-0.8l-11.5-0.1l2.8-5.7l0.1-2.4l-1.8-1l-17.5-2.7l-3.5-1.4l-2.3-2.3l-0.8-3.8l2-2.6     l5.8-1.2l-0.9-2l5-4.4l0.7-1.4l-3.2-6.5l-1.7-1.2l0.9-3.6l-3.2-2.8l-0.1-1.4l-2.9,0.5l-6.1-2.1l-4.2-0.8l-0.8-1.1l1.9-2.4     l-2.3-1.7l1.6-1.6l-1.8-1.6h-2.7l3.7-5.5l1.9-4.8l2.7-1l1.2-2.3l-0.6-2l-2.8-0.3l1.1-3.9l1.9-2.5l-3-3.1l4.5-2.4l1.1,1.6l2-3.2     l-0.9-1.6l4.8-2.6l2.9-0.6l1.6,1.6l1.6-1.4l1.7,2.9l3.6,2.4l1.5-1.5l4.2,0.5l2.2-1.4l2,0.9l3.7-2.7l0.5-3.7l-1.8-1.6l0,0l3-0.3     l22.7,3.5l18.9,6.1l3.6-1.1l2.9,1.6l3.2-1.5l0.3,2.7l7.8,2.5l3.2,5.5l7.5,0.4l1.9-1.6l3.6-0.6l7,4.5l2.6,0.6l2.4-1.5l7.7,0.9     l5.5-0.4l0.3,6.1l5.5-1.7l1.9,1l5.6-1.4l-3,4.1l-3.9,1.6l-2,3.9l-5.5,3.4l-14,20.2v2.3l7.4,8.8l-2.6,5.1l-3,1.7l-0.9,15.4     l2.2,4.2l-0.3,4.2l2.7,4.6l-7.7,1.8l-3.6-0.2l-7.1,1.1l-5.2-1.8l-3.7,0.1l-3.1,1.3l-5.1,1L454.8,355.3z"}, {"dept": "Escuintla", "class": "st9", "d": "M381.5,499.3l-9-1l-10,1.2l-12.8,0.8l-15-0.3l-13.7-1.6l-16.9-3.5l-23.7-10.8l-0.1-4l8.3-12.5l-0.5-9.4     l0.4-3.5l1.1-0.8l2,2.5l1.9-1.3l-1.1-4.7l1-2.2l3.2-2.4h2.3l1,2.2l-1,2.1l0.7,3.7l3.6,1.8l3-2.8l1.2,1.2l-0.6,2.8l13.8,1.2     l2.5-4.3l0.3-5.6l3.9-8.5l2.4,1.7l4.9-1.4l3.5,2.3l2.8-1.5l0.9,3.9l1.3,0.2l3-6.4l6.1-5.7l4.2,3.9l3.6,5.9l6.5-6.3l4.2-0.9     l1.3,2.7l7.2-2.9l1.4,4.3l1.6,1.5l3,0.5l1.2,7.5l-0.1,3.9l2.4,7.1l-1.7,1.6l-0.8,3.5l4,0.6l1.8-0.7l2.3,1.3l-4.2,4.2l-2.8,0.7     v1.6l2.5,3.4l-2.9,2.5l-1.2,2.8l-3.8,2L381.5,499.3z"}, {"dept": "Chimaltenango", "class": "st10", "d": "M352.1,432.9l-6.1,5.7l-3,6.4l-1.3-0.2l-0.9-3.9l-2.8,1.5l-3.5-2.3l-4.9,1.4l-2.4-1.7l1.6-4.3v-5.3     l-1.9-2.1l1-11.9l3.6-7.9l0.6-5.2l-2-9.5l3.8-2.1l3.2-8.3l5.3-2.5l9.3,0.2l4.6-0.5l5.3,1.6h5.8l10.7,2.8l-0.8,3l-4.4,2.8     l-1.9,0.2l-1.9,2l-1,3.5l-2,3.2l-2.1,4.7l1.3,7.8l-2.5,4.7l-2.8,2.1l-5.1,5.7l-2.4,4.7L352.1,432.9z"}, {"dept": "Guatemala", "class": "st11", "d": "M388.6,460.2l-2.4-7.1l0.1-3.9l-1.2-7.5l-3-0.5l-1.6-1.5l-1.4-4.3l1-4.3l0.8-9.4l1.6-2.5l0.2-4.6l-2.6-3.1     l-1-3.3l-4.5-5.4l-4.2-0.1l-4.1-3.3l2-3.2l1-3.5l1.9-2l1.9-0.2l4.4-2.8l0.8-3l7.1,2.4l6.2-0.8l5.5-2.1l1.4,1.6l3.9-0.3l3.5-2.3     l1.3,2.1l-1.9,3.2l1.2,2.2l6.3-0.3l2.1,7l-1.4,2.8l0.5,2.3l3.4,3.4l8,3.2l3.1,2.4l-1.5,3.4l-4.8,3.9l-0.7,4.6l-1.3,3.1l-0.2,3.6     l-3.2,0.9l-4,3.3l-1.1-2.9l-3.2,0.7l-4.6,7.3l-2.1,5.3l0.4,6.9l-3.2,2.9l-4.2,1.8l-3,2.6L388.6,460.2z"}, {"dept": "Suchitepéquez", "class": "st12", "d": "M327.1,428.1l1.9,2.1v5.3l-1.6,4.3l-3.9,8.5l-0.3,5.6l-2.5,4.3l-13.8-1.2l0.6-2.8l-1.2-1.2l-3,2.8l-3.6-1.8     l-0.7-3.7l1-2.1l-1-2.2h-2.3l-3.2,2.4l-1,2.2l1.1,4.7l-1.9,1.3l-2-2.5l-1.1,0.8l-0.4,3.5l0.5,9.4l-8.3,12.5l0.1,4l-2.6-1.2     L266,476l-0.7-5.6l3.2-4.8l1.1-8.3l2.7-6.2l0.6-10.4l-1.9-5.3l0.9-8.3l4.5-9.1v-4.3l3.2-4l3.4-3l4.6-3.1l2.2,5l-0.4,2.7l-2.7,5.1     l1.6,1.6l6.6,1.2l0.6-4.3l1.5-1.6l3.2,0.7l1.4,1.6l4.5-0.3l4.9,4.9l0.2,4.9l3.2,0.1l3.1-1.6l2.8,0.1L327.1,428.1z"}, {"dept": "Sacatepéquez", "class": "st13", "d": "M379,435.4l-7.2,2.9l-1.3-2.7l-4.2,0.9l-6.5,6.3l-3.6-5.9L352,433l0.5-4l2.4-4.7l5.1-5.7l2.8-2.1l2.5-4.7     L364,404l2.1-4.7l4.1,3.3l4.2,0.1l4.5,5.4l1,3.3l2.6,3.1l-0.2,4.6l-1.6,2.5l-0.8,9.4L379,435.4z"}, {"dept": "Sololá", "class": "st14", "d": "M330.2,393.6l2,9.5l-0.6,5.2l-3.6,7.9l-1,11.9l-6.9-4.7l-2.8-0.1l-3.1,1.6l-3.2-0.1l-0.2-4.9l-4.9-4.9     l-4.5,0.3l-1.4-1.6l-3.2-0.7l-1.5,1.6l-0.6,4.3l-6.6-1.2l-1.6-1.6l2.7-5.1l0.4-2.7l-2.2-5l3.3-4.5l1.4-4.6l5.6-4.8l2.3-0.5l5,1.1     l2.3-1l5.2,0.9l1.8-0.5l5.2-5.9l1.4,0.7l1.6,3.5l4.2,1.7l-1.5,5.3l1.7,0.6l1.4-2.6L330.2,393.6z"}, {"dept": "Totonicapán", "class": "st15", "d": "M319.5,383.7l-5.2,5.9l-1.8,0.5l-5.2-0.9l-2.3,1l-5-1.1l-2.3,0.5l-5.6,4.8l-3.4-5.1l-1.3-5.7l-5.3,0.1     l-2.1-2.6l0.1-3.5l-2.7-2.8l-3.1-12.3l0.2-4.6l7.7-2.8l4.6-0.7l0.3-3.3l3.2-4.4l5.9-1.4l5.8-2.8l2.9,0.2l-0.6,5.4l0.6,1.8     l5.7,5.2l1.8,5.5l1.5,1.6l-0.7,2.5l-2.3,0.4l-1.5,2l0.3,2.1l3.2,2.3l1.8,4.3l2.2,2.7l-0.9,2.7L319.5,383.7z"}, {"dept": "El Progreso", "class": "st16", "d": "M428.4,411.5l-3.1-2.4l-8-3.2l-3.4-3.4l-0.5-2.3l1.4-2.8l-2.1-7l-6.3,0.3l-1.2-2.2l1.9-3.2l1.4,1.3l3.7,0.7     l5.7-0.9l2.3-7.6l17.7-12.5l13.9-9.4l3-1.7l5.5,0.6l5.1-1l9.1,13.6l0.1,1.6l-5.4,0.2l-0.6,1.3l5.8,8.1l3.6,1.6l-0.4,2.9l-4.8,1     l-2.5,2.9l-3.2-0.1l-2.8,1.8l-3.9,5l-6.6,3.1l-6.3,1.3l-3.5,6.6l-0.9,0.7l-4-1.2l-6.7,2.5l-1.2,2.7L428.4,411.5z"}, {"dept": "Santa Rosa", "class": "st17", "d": "M425,514.7l-18.1-8.1l-11.1-4.2l-9-2.2l-5.2-0.9v-15.8l3.8-2l1.2-2.8l2.9-2.5l-2.5-3.4v-1.6l2.8-0.7     l4.2-4.2l-2.3-1.3l-1.8,0.7l-4-0.6l0.8-3.5l1.7-1.6l3.2-1.2l3-2.6l4.2-1.8l3.2-2.9l-0.4-6.9l2.1-5.3l4.6-7.3l3.2-0.7l1.1,2.9     l4-3.3l3.2-0.9l2.3,2.3l15.3-2.8l1.6,4.3l7,5.6l-2,6.4l-1.6,0.2v2.7l-2.3-0.5l-3.9,0.8l-1.7,1.5l-4,10.1l1.6,1.2l5.2,1.4l8.1,7     l0.9,8.4l-1,3.3l-2.6,3.6l-4.1,1.4l-2.5,4.7l-1.8,1.2l-6.9-1.7l-5.3-3.7l-3,2.2l1.6,3.5l0.8,4.8l1.8,2.4l2.6,6.8l0.2,3.2     L425,514.7z"}, {"dept": "Izabal", "class": "st18", "d": "M495.8,352.4l-2.7-4.6l0.3-4.2l-2.2-4.2l0.9-15.4l3-1.7l2.6-5.1l-7.4-8.8v-2.3l14-20.2l5.5-3.4l2-3.9     l3.9-1.6l3-4.1l1.7-1.2l2.5-4.9l10.3-0.3l3.3,1l0.9,3l5.6-2.3l8.5,0.3l6.7-0.6l9.9,2.5l4.2-1.7l5.3,3.9l3.9-1l4.9,1.1l3.8,2.2     l0.4,2.4l2.5,0.4l11.3,7l-1.1,6.1l4.2-0.5l-0.8-4.3l2.6-0.3l0.9-2.9l2.6-3.3v-4.7l2-0.9h4.9l-6.1-4.4l-2.4-3.4l-4.8-2.8l-1.4-1.7     l1.6-1.9l6.2,3.1l3.2,3.4l2.3,1.3l5.8,4.9l11.5,5.4l10,8.2l3.9,1.7l-2.9,3.6l-5.3,2.4l-2.4,0.1l-3.9,6.8l-5.2,5.3l-11.1,9     l-52.5,41.8l-3.9,1.9l-11.3,3.9l-4.1,2.4l-3.9-3.6l-0.9-3.9l-1-8.6l2.3-1.3l0.7-4.4l-0.6-1.8l-3.9-2.5l-4.5-0.6l-4.2,1.4     l-2.9,2.3l-13,5.4l-13.2,4.6L495.8,352.4z"}, {"dept": "Chiquimula", "class": "st19", "d": "M542.5,383.3l-4.7,5.3l0.4,3.9l4.3,5.9l2.1,5.1l2.9,3.5l-0.1,2.9l-1.6,2l0.5,5.8l-0.6,4l-2.6,1.4l-4.2-1.2     l-2.8,0.8l-1.5,2.2l-5.1,4.9l-2,3l-3.6,1.4l-0.9,3.4l0.3,3.6l-4.1-3.5l-3.7,3.1l-4.3-0.8l-3,0.3l-1.7-2.2l1.5-5.9l-0.2-2l-2.3-2     l-8.4,0.3l-3.2-4.3l-2.5-1.6l-4.5-0.5h-1.6l0.4-2.5l3.9-11.3l-0.8-2.4v-5.1l-1-2.2l-6.8-0.1l2.6-4.9l0.3-5.3l4.4-3.9l1.3,0.1     l7.4,3.7l7.6,0.5l1.7-0.5l6.8-5.5l3.1-0.6l5.8,1.8l5.5-1.9l2.9,1.6l2.2-0.5l2.9-3l3.9-1.6L542.5,383.3z"}, {"dept": "Jalapa", "class": "st20", "d": "M481.3,399.1l6.8,0.1l1,2.2v5.1l0.8,2.4l-3.9,11.3l-0.4,2.5h1.6l0.8,4.1l-9.4,4.9l-3-2.7l-3,0.4l-6.2,4.3     l-1.5,5.4l-5-3.9l-2.7-0.2l-3.9,4.4l-7.1,0.1l-7-5.6l-1.6-4.3l-15.3,2.8l-2.3-2.3l0.2-3.6l1.3-3.1l0.7-4.6l4.8-3.9l1.5-3.4     l2.8-1.4l1.2-2.7l6.7-2.5l4,1.2l0.9-0.7l3.5-6.6l6.3-1.3l6.6-3.1l3.9-5l2.8-1.8l3.2,0.1l-0.9,1.9l5.4,8.7L481.3,399.1z"}, {"dept": "Jutiapa", "class": "st21", "d": "M425,514.7l1.1-4.4l-0.2-3.2l-2.6-6.8l-1.8-2.4l-0.8-4.8l-1.6-3.5l3-2.2l5.3,3.7l6.9,1.7l1.8-1.2l2.5-4.7     l4.1-1.4l2.6-3.6l1-3.3l-0.9-8.4l-8.1-7l-5.2-1.4l-1.6-1.2l4-10.1l1.7-1.5l3.9-0.8l2.3,0.5V446l1.6-0.2l2-6.4l7.1-0.1l3.9-4.4     l2.7,0.2l5,3.9l1.5-5.4l6.2-4.3l3-0.4l3,2.7l9.4-4.9l-0.8-4.1l4.5,0.5l2.5,1.6l3.2,4.3l8.4-0.3l2.3,2l0.2,2l-1.5,5.9l1.7,2.2     l-5,4.8l-0.3-2.1l-2.9-1.4l-2.3,3.1l1.6,3.8l-2.5,2.9l0.7,1.7l2.3,0.2l2.4,2.7l0.6,3.1l2.3,1.7l-0.7,2.5l-12,2.9l-2.9,1.4     l-5.1,4.7l-4.8,8.6l0.6,4.4l-1.6,0.9l-4.6-2.9l-3.7-0.4l-5,1.9l-3.6,3.2l-12.5,9.1l-2.7,5l-5.8,4.2l-1.5,3.5l-0.2,3.7l2.4,7.9     L425,514.7z"}, {"dept": "Zacapa", "class": "st22", "d": "M481.3,399.1l-6.4-0.6l-5.4-8.7l0.9-1.9l2.5-2.9l4.8-1l0.4-2.9l-3.6-1.6l-5.8-8.1l0.6-1.3l5.4-0.2l-0.1-1.6     l-9.1-13.6l3.1-1.3l3.7-0.1l5.2,1.8l7.1-1.1l3.6,0.2l7.7-1.8l6.2-0.9l13.2-4.6l13-5.4l2.9-2.3l4.2-1.4l4.5,0.6l3.9,2.5l0.6,1.8     l-0.7,4.4l-2.3,1.3l1,8.6l0.9,3.9l3.9,3.6l-2.9,3.4l-1.7,5.4l2.2,2v3.1l-2.2,4.6l-2.6-4.2l-3.9,1.6l-2.9,3l-2.2,0.5l-2.9-1.6     l-5.5,1.9l-5.8-1.8l-3.1,0.6l-6.8,5.5l-1.7,0.5l-7.6-0.5l-7.4-3.7l-1.3-0.1l-4.4,3.9l-0.3,5.3L481.3,399.1z"}], "texts": [{"text": "Quiché", "transform": "matrix(1 0 0 1 333.6611 321.6786)", "class": "st23 st24"}, {"text": "Petén", "transform": "matrix(1 0 0 1 428.4437 145.2425)", "class": "st23 st24"}, {"text": "Huehuetenango", "transform": "matrix(1 0 0 1 244.2011 283.4999)", "class": "st23 st25"}, {"text": "Quetzaltenango", "transform": "matrix(0.7899 -0.6132 0.6132 0.7899 229.5384 425.6406)", "class": "st23 st26"}, {"text": "Retalhuleu", "transform": "matrix(0.7607 -0.6491 0.6491 0.7607 233.8257 450.1907)", "class": "st23 st25"}, {"text": "San Marcos", "transform": "matrix(0.463 -0.8863 0.8863 0.463 222.2331 394.455)", "class": "st23 st27"}, {"text": "Baja Verapaz", "transform": "matrix(1 0 0 1 370.1868 363.2651)", "class": "st23 st24"}, {"text": "Alta Verapaz", "transform": "matrix(1 0 0 1 403.7601 301.6652)", "class": "st23 st24"}, {"text": "Escuintla", "transform": "matrix(1 0 0 1 315.0104 475.8946)", "class": "st23 st24"}, {"text": "Chimaltenango", "transform": "matrix(0.2743 -0.9616 0.9616 0.2743 341.026 439.5067)", "class": "st23 st28"}, {"text": "Guatemala", "transform": "matrix(7.504715e-02 -0.9972 0.9972 7.504715e-02 395.5065 447.5152)", "class": "st23 st24"}, {"text": "Suchitepéquez", "transform": "matrix(0.4694 -0.883 0.883 0.4694 275.369 477.1408)", "class": "st23 st26"}, {"text": "Sacatepéquez", "transform": "matrix(0.5494 -0.8355 0.8355 0.5494 361.5909 435.7715)", "class": "st23 st29"}, {"text": "Sololá", "transform": "matrix(1 0 0 1 292.3188 407.8197)", "class": "st23 st25"}, {"text": "Totonicapán", "transform": "matrix(1 0 0 1 278.971 368.4926)", "class": "st23 st25"}, {"text": "El Progreso", "transform": "matrix(0.8306 -0.5569 0.5569 0.8306 419.9531 399.3644)", "class": "st23 st25"}, {"text": "Santa Rosa", "transform": "matrix(0.4756 -0.8797 0.8797 0.4756 399.6354 496.7247)", "class": "st23 st30"}, {"text": "Izabal", "transform": "matrix(1 0 0 1 552.7528 312.2928)", "class": "st23 st24"}, {"text": "Chiquimula", "transform": "matrix(1 0 0 1 490.2175 413.6313)", "class": "st23 st25"}, {"text": "Jalapa", "transform": "matrix(1 0 0 1 441.6348 421.0817)", "class": "st23 st24"}, {"text": "Jutiapa", "transform": "matrix(1 0 0 1 451.0339 460.1841)", "class": "st23 st24"}, {"text": "Zacapa", "transform": "matrix(1 0 0 1 485.7834 368.4922)", "class": "st23 st24"}], "belize": {"scale": 0.303, "tx": 461.5, "ty": -9.5, "paths": [{"id": "BZCY", "name": "Cayo", "d": "M272.7 776.9l3-35.8 6-97.5 5.6-90.2-0.5-99.1 10.1-8.3 13.8-9.2 4.7-1.7 3.7-0.2 2.6 1 2.6 0.6 38.7-4.4 4.6-1.5 3.4-2.4 2-2.8 2.4-2.8 2.3-0.8 5 0.9 5.9 0.4 7.8-0.3 3.4 0.2 4.8-0.5 9 0.4 7.5-1 6-2.1 9.8-6.6 5.6-2.1 3.9-0.6 6.8-3.4 2.5-0.7 4.7 1.6 7.8-3.3 2-3.5 2-4.4 2.8-1.4 1.2 2.1 0.8 4.8 3.4 69.4 0 0.2-0.4 12.6 0.4 1.9 3.7 5.4 2.8 6.6 0.3 3.9-0.1 3.2-1.6 4.1-0.4 2.5-1.2 3.8-0.7 1.7-0.7 0.8-0.7 0.4-0.6 1-0.6 1.2-0.3 1.8-1.2 2.1-0.6 0.8-0.8 0.7-1.1 0.6-7.4 2.7-1.1 3.4 1.2 2.9 4.8 7.9 4.6 4.1 2.3 2.4-0.2 2.9-1.5 1.6-1.9 1.3-1.1 1.5-3.4 7.1-2 5.6-2.1 3.9-2 3-3.9 2.8-1.6 1.5-2.3 4-10 11.1-0.6 1.7 0 1.5 0.4 1.4-0.1 2.1-0.8 4.7-0.1 1.8 0.5 4.3-0.3 1.8-0.6 1.5-0.8 1.1-1.1 0.9-3.2 1.5-1.9 1.8-0.6 1.1 0.3 1.3 4.4 3.2 1.2 1.4-0.1 1.1-1 0.9-1.4 0.4-5.9 1-6.4 2.2-1.8 1.2-1.6 1.6-9.2 14.2-1.9 5.2-3.6 6.6-1.9 6.8 0 1.5 1.2 4.4-5.6 0.3-2.6 1.4-1 0.7-1.9 2.1-3.6 4.5-0.8 1.7-0.3 1.4 1.4 5.9 0.3 1.8-1 3.6-6.7 6.9-5.3 4.1-1.5 0.7-2.7 0.8-2.3 1.2-8.9 6.9-3 1.8-2 0.5-1.6-0.2-2 0.4-3.8 1.7-1.9 1.3-1.4 1.4-1.5 2.2 0 1.2 0.4 2.9-1.4 1-13.1 5-1.8 0.4-1.4 0-1.1-0.6-2.3-2.5-1-0.9-1.1-0.7-1.6-0.6-0.8 0.5-2.2 2.5-6.8 6.6-2.5 1.9-2.2 1.1-5.6 0.6-2.4 0.9-1.3 0.2-4.4 0.4-11.7 4.8-1.5 1-1.4 1.7-1.1 1.6-0.2 0.7-0.2 1.8-0.6 1.4-0.9 1.5-2.3 2.8-1.6 1.7-1.9 2.4-3.7 5.6z"}, {"id": "BZOW", "name": "Orange Walk", "d": "M460.4 408l-4.7-1.6-2.5 0.7-6.8 3.4-3.9 0.6-5.6 2.1-9.8 6.6-6 2.1-7.5 1-9-0.4-4.8 0.5-3.4-0.2-7.8 0.3-5.9-0.4-5-0.9-2.3 0.8-2.4 2.8-2 2.8-3.4 2.4-4.6 1.5-38.7 4.4-2.6-0.6-2.6-1-3.7 0.2-4.7 1.7-13.8 9.2-10.1 8.3-1.8-96.6-1.4-75.5-0.3-30.4 2.5-13.9 2.5-3.6 4.6-6.6 27.6-10.1 7.1 2.5 5.5 5 5 5.6 5.6 4.3 4 0.4 3.7-0.8 3.2 0.7 4.5 9.9 4.3 3.2 13.4 7.9 2.9-0.9 2-2.8 1.5-7.7 1.5-2.5 17-12.8 3.1-3.8 4.8-13.6 1.6-3.2 4.9-4.2 4.6-2.6 3.9-3 3.3-5.2 1-3.8 1-7.9 1-3.5 8.2-14 1.1-3.9-1.1-4.9-1.2-1 9.4-7.1 9.7-4.6 4-3.1 3.3-5.3 1-4 3.4 0.7 21.2 9.4 15.2 11.2 24.2 33.1 45.7 41.7-73.8 19.1-17.6 10.1-2.1 6.1-0.7 3-0.4 3.5 0.2 2.6 1.2 4.6 0.3 2.2-0.1 4.5-2 9.2-0.2 1.6 0 1.9 1.1 7.8 0.1 2-1.1 8.3 0.2 2.5 1.7 4.5 0.4 1.8-0.2 2.3-1.5 1.6-2.8 1.2-3.3 1-9.8 4.6-3.8 5.9-4.3 12.3-0.2 6.2 4.1 50.6z"}, {"id": "BZCZL", "name": "Corozal", "d": "M575 227l-45.7-41.7-24.2-33.1-15.2-11.2-21.2-9.4-3.4-0.7 0.3-1.3 0.6-5.5 1.2-6 3.2-5.6 10.3-11.9 4.1-6.6 1.2-4 1.3-8.9 3-8.4 1.8-10.6 1.7-3.8 2.5-2.6 10.3-8.1 3.4 0.4 3.1 1.7 3.4 1 2.9-0.4 6.7-2.4 3.6-1.8 2.2-0.6 1.8 0.6 3.2 3.1 2.5 1.5 1.9-0.3 2-1.1 2.5-0.7 20.6-0.2 1.9 0.4 0 1.2 5.7 5.3-6.5 8.5-25.8 18.7-2.4 5.1 3.8 5.5 4.7 0.3 16-7.3-1.9 5.1-3.1 5.4-7.6 9.7-1.9 3.1 1 1.6 2.6-0.2 2.9-2.1 5.6-6.3 11-8 5.2-2.5 5.6-1 7.4 1 9.7 4.8 4.3 1.4 7.1-1.1 10-7 11.6-3.6 3.9-0.5 1.7 1.3-0.6 4.9-1.9 3.3-6.6 5.1-7.6 3.2-1.5 1.5-0.1 3.9 2.4 0.8 2.9-1.2 2.5-4.2 2.7-1.9 3.4-1.5 3.3-0.6 1.1 1.9 2.7 41.4-2.7 32.1-1.1 5.5-4.6 8.3-1.1 5.5-12.5 32.1-5.7 3.9 0 0.1-39.1-4.3z"}, {"id": "BZTOL", "name": "Toledo", "d": "M272.7 776.9l3.7-5.6 1.9-2.4 1.6-1.7 2.3-2.8 0.9-1.5 0.6-1.4 0.2-1.8 0.2-0.7 1.1-1.6 1.4-1.7 1.5-1 11.7-4.8 4.4-0.4 1.3-0.2 2.4-0.9 5.6-0.6 2.2-1.1 2.5-1.9 6.8-6.6 2.2-2.5 0.8-0.5 1.6 0.6 1.1 0.7 1 0.9 2.3 2.5 1.1 0.6 1.4 0 1.8-0.4 13.1-5 1.4-1-0.4-2.9 0-1.2 1.5-2.2 1.4-1.4 1.9-1.3 3.8-1.7 2-0.4 1.6 0.2 2-0.5 3-1.8 8.9-6.9 2.3-1.2 2.7-0.8 1.5-0.7 5.3-4.1 6.7-6.9 1-3.6-0.3-1.8-1.4-5.9 0.3-1.4 0.8-1.7 3.6-4.5 1.9-2.1 1-0.7 2.6-1.4 5.6-0.3 9.6-3.2 24.9-0.6 7.6 0.9 4.9 1.2 11.5 6.4 1.7 1.6 1 1.6 1 2.9 0.8 1.5 0.1 1.4-0.1 1.4-1.3 3.2 0.2 1.7 1.4 2 4.1 4.5 1.1 1.7 1 1.4 0.7 1.3 0.9 1.4 0.7 1.6 0.9 1.3 1.4 2.6 0.6 1.7 0.1 1.3-0.2 1.2-0.4 2.2-0.5 5.7-0.2 1.1 0 1.5-0.7 1.4-0.7 0.8-0.5 1.5 2 0.9 13.5 1.9 2-0.1 1-0.3 13.1 0.8 1.4-0.1 3.5 0.1 1.8 0.4 1.5 0.1 6.9-1.1 3.3 0.2 1.4 0.4 0.9 2.6 3.8 1.6 1.2 2.5-6.2 4.8-6.8 13.7-6.3 2.9-0.6 1.9-0.6 8.2 0.1 1.7-1.9 1.2-1.7 0-1.2-0.6 0-0.6-2.1 1.4-0.7 0.7-0.4 0.9-1.3 1.7-4.3 10.4-1.3 1.7-2.6 1.5-8.7 11.5-1 1.8-1.4 4.6-0.9 1.7-0.2 1 0.4 2.9-0.2 1-0.9 0.2-2.7-0.4-1 0.2-1.4 0.8-4 0.9-1.6 0.9-0.7 1.3-1.6 5.6 0-14.4-2.2 0-2.3 7.5-4.7 1.1-4.6-2.9-2-4.5-1.3-1.9-2.8-0.3-2.8 0.6-1.2 0.4-0.4 1.2 0.1 6.1-0.9 2.3-2.4 0.8-11.3 1.6-1.9 1.3-1.6 1.6-2.3 1.4-4.5 0.6-4.7 2.2-1.4 5.5 0.8 13.4-1.3 7.2-3.1 5.3-4.7 3.2-5.8 1.1-1.7 0.9-2 2.2-1.6 2.6-1.5 6.1-2 1.7-2.9 1.2-3.2 1.8-3.7 3.2-1.6 1.8-1.5 2.1-0.8 3.8 0.3 3.9-0.9 2.9-8.7 2.6-5.8 3.5-5.5 4.6-3.8 4.7-1.1 8.6 6.9 14.4-1.2 8.1-12.6 4.9-29.4-7.6-10.7 0.1-9.5 1.6-25.5-1.2-6 2.6-3.1 0.1-3.9 1.3-3.1 1.6-0.7 1.1-2.8-4.5 0.2-4.3 0.6-16.8 8.5-80 5.1-71.6z"}, {"id": "BZSC", "name": "Stann Creek", "d": "M412.1 676.9l-1.2-4.4 0-1.5 1.9-6.8 3.6-6.6 1.9-5.2 9.2-14.2 1.6-1.6 1.8-1.2 6.4-2.2 5.9-1 1.4-0.4 1-0.9 0.1-1.1-1.2-1.4-4.4-3.2-0.3-1.3 0.6-1.1 1.9-1.8 3.2-1.5 1.1-0.9 0.8-1.1 0.6-1.5 0.3-1.8-0.5-4.3 0.1-1.8 0.8-4.7 0.1-2.1-0.4-1.4 0-1.5 0.6-1.7 10-11.1 2.3-4 1.6-1.5 3.9-2.8 2-3 2.1-3.9 2-5.6 3.4-7.1 1.1-1.5 1.9-1.3 1.5-1.6 0.2-2.9-2.3-2.4-4.6-4.1-4.8-7.9-1.2-2.9 1.1-3.4 88.1-1.6 3.1-1.1 1.7-1 6.8-2.6 4.4-4.6 0.3 3.1 1.7 8 1.3 4.3 3.2 1.8 7.1 2.4 4 5.3 2.8 6.7 1.5 7.6 0.9 11 1.9 8.5-0.8 4-2.1 0.9-2.9 0-3.2 1.2-3.7 3.3-4.5 5.3-3.9 6-1.6 5.6 1.5 6.4 6.5 10.3 1.3 6 0.6 0 1.1 0.9 0.9 1.6-0.3 2-1.3 0.3-4.3-0.6-1.4 0.3-4.3 3.4-1.7 2.1-0.6 3.1-0.8 1.7-1.6 1.7-1.7 2.4-0.7 3.6 0.3 4.2 1.6 5.4 0.4 3.4-3.1 24.6-2.1 3.8-2.9 3-3.3 4.4-3.8 14.2-1.8 4.3-1.1 6.2 2.2 8.7-1.4 3.2-2.4 3.1-2.2 0.2-1-5.4 10.4-39.5 5.6-5.9 2.1-3.5-8.7 4.5-9 22.8-7.3 8.4 2.2 0.4 4.7 2.2-2.3 1.2-1.7 0.5-2.1-0.3-3-1.4 0.7 3.1 0.8 1.4 1.8 0.4 3.5-0.1 0 2.1-3.6 2.4-2.5 3.5-0.6 4.2 0.9 1.8-3.8-1.6-0.9-2.6-1.4-0.4-3.3-0.2-6.9 1.1-1.5-0.1-1.8-0.4-3.5-0.1-1.4 0.1-13.1-0.8-1 0.3-2 0.1-13.5-1.9-2-0.9 0.5-1.5 0.7-0.8 0.7-1.4 0-1.5 0.2-1.1 0.5-5.7 0.4-2.2 0.2-1.2-0.1-1.3-0.6-1.7-1.4-2.6-0.9-1.3-0.7-1.6-0.9-1.4-0.7-1.3-1-1.4-1.1-1.7-4.1-4.5-1.4-2-0.2-1.7 1.3-3.2 0.1-1.4-0.1-1.4-0.8-1.5-1-2.9-1-1.6-1.7-1.6-11.5-6.4-4.9-1.2-7.6-0.9-24.9 0.6-9.6 3.2z"}, {"id": "BZBZ", "name": "Belize", "d": "M469.2 529.7l7.4-2.7 1.1-0.6 0.8-0.7 0.6-0.8 1.2-2.1 0.3-1.8 0.6-1.2 0.6-1 0.7-0.4 0.7-0.8 0.7-1.7 1.2-3.8 0.4-2.5 1.6-4.1 0.1-3.2-0.3-3.9-2.8-6.6-3.7-5.4-0.4-1.9 0.4-12.6 0-0.2-3.4-69.4-0.8-4.8-1.2-2.1-2.8 1.4-2 4.4-2 3.5-7.8 3.3-4.1-50.6 0.2-6.2 4.3-12.3 3.8-5.9 9.8-4.6 3.3-1 2.8-1.2 1.5-1.6 0.2-2.3-0.4-1.8-1.7-4.5-0.2-2.5 1.1-8.3-0.1-2-1.1-7.8 0-1.9 0.2-1.6 2-9.2 0.1-4.5-0.3-2.2-1.2-4.6-0.2-2.6 0.4-3.5 0.7-3 2.1-6.1 17.6-10.1 73.8-19.1 39.1 4.3-13.8 27.3 2 9-4 29-8.2 28.9-2.6 5.8-8.6 10.4-3.5 6.4-1.5 7.5 1.4 8.3 4 4.3 11.9 6 2.5 5.3 3.2 2.9 13.9 2.5 3.1 2.8-4 6.8-8.6-0.1-8.5-1.3-3.8 3.2-0.9 5.4-13.8 46.1-3.2 35.4-0.3 7.3-1.2 13.6 2.4 7.4 1.3 6.6 0 0.7-4.4 4.6-6.8 2.6-1.7 1-3.1 1.1-88.1 1.6z m254.1-98.9l4.2-3.7 3.8 6.2 5.6 16.7-1.5 2.6-0.6 3.5 0.1 8.2-2.3 0 0.1-3.6-0.1-1.2-1.9 0.6-1.3 1-0.8 1.4-0.7 1.8 0.2-21.1-1.1-8.8-3.7-3.6z m3.5-54.8l4 0.2 4.8 1.1 4.1 3.5 2 6.9-1.4 5.3-6.8 13.6-4.5 6-3.3 5.9-4.9 3.2-6.6-5.2-3.4 5.7-4.2 3.2-3.8 4.2-2.4 8.5-2.1 15.6-0.8 2.6-1.7 3.5-1.5 4.3-0.3 5-4.7-4.8 1.2-1.2 0.4-1.1 0.2-1.2 0.4-1.3 0.8-7.4 3.1-12.2 1.6-16.8 2.6-5.5 4.3-4 5.8-4.2 6.8-7.2 3.4-0.3 4.9 2.1 4.2 0.6 3.2-3 2.6-6.9 0.6-7.3-2.8-4.4-3.7 3.3-3 1.7-2.6-0.3 0.2-2.2 3.3-9.5z m-82.9-33.5l4.5 3.9 3.3 8.5 3.3 18.5-2.3 0-1.7-3.3-2.9-8.3-4.2-19.3z m-27.7-14.3l6.9-3.3 18.9-13 3.9-1.7-3.1 11.3-7.7 7-10.4 3.5-10.8 0.9 0-1.6 0.4-1.1 1.9-2z m82.1-120l2.1 0-2.6 15.2-6.5 13.9-10.4 10.2-14.4 3.9 0-2.4 3.5 0.2 1.1-0.2 12.1-8.7 4.3-6.1 1.8-9-5.3 0.2 1.4-10.8 6.1-21.9 0.7-1.5 1.6-1.3 1.6-1.6 0.7-2.7 0.2-3.5 4.9-18.4 3.3-3.1 5.2 2.2 7.3-4.8 3.3 4.7-0.5 7.8-4.4 4.1-2.5 3.9-6.8 18.9-3.2 6.3-2.3-1.6-2.3-1-0.8 3.6-1.2 2.6-2 1.9-2.8 1.4 0 2.4 2.5 5 3.1-4.6 0.8-2.1 0.4-3.1z m-60.5 177.7l6.1 4.7 3.1 4.6-0.7 3.5-0.9 1.5-0.1 2.1-1.4 3.2-2.3-0.3-0.6-2.9-0.4-7.2-0.5-1.5-2.6 0.3-2.9-1.3-1.9-2.4-1.1-1.8-1.1-1 0.1-2 2.2-1.5 5 2z m42-200.4l2-0.8 0.9 1-0.7 3.6-2.7 2.4-3.6 0.7-1-2.2 2.4-3.5 1.7-1.1 1-0.1z m9.9-9.7l0.8 1.4 0.2 3.8-1.9 3.6-2.8 2.1-1.2-0.3-0.4-1.8-0.5-1.3 0.5-1.3 1.7-0.9 1.8-1.5 0.6-2 0.6-1.3 0.6-0.5z m20.3-31.3l1.2 0.6 0.2 1.4-0.2 1.8-1.2 3.5-3.1 4.1-1.9-1.7 0.9-6 1.3-2.1 1 0.9 0.2-0.8-0.5-1.5 0.1-0.6 1.1 0.3 0.9 0.1z"}], "label": {"text": "Belice", "x": 605, "y": 165}}};
+
+    let currentMetric = 'capacidad_total';
+    let selectedDept = null;
+    let filteredLinks = [...DASHBOARD_DATA.links];
+    let sortColumn = 'CAPACIDAD CONTRATO';
+    let sortAsc = false;
+
+    // SVG Pan & Zoom state
+    let scale = 1;
+    let translateX = 0;
+    let translateY = 0;
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+
+    // Color Ramps
+    const COLOR_RAMP = [
+      '#e0f2fe', '#bae6fd', '#7dd3fc', '#38bdf8', '#0284c7', '#0369a1', '#1e3a8a'
+    ];
+
+    function init() {
+      populateInstitutionsFilter();
+      renderSvgMap();
+      renderBelize();
+      updateDashboard();
+      initPanZoom();
+    }
+
+    function populateInstitutionsFilter() {
+      const select = document.getElementById('filter-institution');
+      const insts = Array.from(new Set(DASHBOARD_DATA.links.map(l => l['SUCURSAL GENERAL']))).sort();
+      insts.forEach(inst => {
+        const opt = document.createElement('option');
+        opt.value = inst;
+        opt.textContent = inst;
+        select.appendChild(opt);
+      });
+    }
+
+    function renderBelize() {
+      const beliceGroup = document.getElementById('belice-group');
+      beliceGroup.innerHTML = '';
+
+      if (!DASHBOARD_DATA.belize) return;
+
+      const bz = DASHBOARD_DATA.belize;
+      const subGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      subGroup.setAttribute('transform', `translate(${bz.tx}, ${bz.ty}) scale(${bz.scale})`);
+
+      bz.paths.forEach(p => {
+        const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        pathEl.setAttribute('d', p.d);
+        pathEl.setAttribute('class', 'belice-path');
+        pathEl.setAttribute('id', 'bz-' + p.id);
+        subGroup.appendChild(pathEl);
+      });
+
+      beliceGroup.appendChild(subGroup);
+
+      // Add Belize Text Label
+      const textEl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      textEl.textContent = bz.label.text;
+      textEl.setAttribute('x', bz.label.x);
+      textEl.setAttribute('y', bz.label.y);
+      textEl.setAttribute('text-anchor', 'middle');
+      textEl.setAttribute('class', 'belice-label');
+      beliceGroup.appendChild(textEl);
+    }
+
+    function renderSvgMap() {
+      const pathsGroup = document.getElementById('paths-group');
+      const labelsGroup = document.getElementById('labels-group');
+      pathsGroup.innerHTML = '';
+      labelsGroup.innerHTML = '';
+
+      DASHBOARD_DATA.paths.forEach(p => {
+        const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        pathEl.setAttribute('d', p.d);
+        pathEl.setAttribute('class', 'dept-path');
+        pathEl.setAttribute('id', 'path-' + sanitizeId(p.dept));
+        pathEl.setAttribute('data-dept', p.dept);
+
+        pathEl.addEventListener('mouseenter', (e) => onDeptHover(e, p.dept));
+        pathEl.addEventListener('mousemove', (e) => onDeptMove(e));
+        pathEl.addEventListener('mouseleave', onDeptLeave);
+        pathEl.addEventListener('click', () => onDeptClick(p.dept));
+
+        pathsGroup.appendChild(pathEl);
+      });
+
+      DASHBOARD_DATA.texts.forEach(t => {
+        const textEl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        textEl.textContent = t.text;
+        textEl.setAttribute('transform', t.transform);
+        textEl.setAttribute('class', 'dept-text');
+        textEl.setAttribute('id', 'label-' + sanitizeId(t.text));
+        textEl.setAttribute('font-size', '11.5px');
+        labelsGroup.appendChild(textEl);
+      });
+    }
+
+    function sanitizeId(str) {
+      return str.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9]/g, '_');
+    }
+
+    function getDepartmentMetricValue(deptName, metric) {
+      const deptLinks = filteredLinks.filter(l => l.DEPARTAMENTO === deptName);
+      if (deptLinks.length === 0) return 0;
+
+      if (metric === 'capacidad_total') {
+        return deptLinks.reduce((acc, l) => acc + (parseInt(l['CAPACIDAD CONTRATO']) || 0), 0);
+      } else if (metric === 'enlaces_total') {
+        return deptLinks.length;
+      } else if (metric === 'municipios_count') {
+        return new Set(deptLinks.map(l => l.MUNICIPIO)).size;
+      } else if (metric === 'promedio_mbps_enlace') {
+        const cap = deptLinks.reduce((acc, l) => acc + (parseInt(l['CAPACIDAD CONTRATO']) || 0), 0);
+        return Math.round(cap / deptLinks.length);
+      }
+      return 0;
+    }
+
+    function getColorForValue(val, minVal, maxVal) {
+      if (val === 0 || maxVal === 0) return '#e2e8f0';
+      const norm = (val - minVal) / (maxVal - minVal || 1);
+      const index = Math.min(COLOR_RAMP.length - 1, Math.floor(norm * COLOR_RAMP.length));
+      return COLOR_RAMP[index];
+    }
+
+    function updateMapColors() {
+      const deptVals = {};
+      let maxVal = 0;
+      let minVal = Infinity;
+
+      DASHBOARD_DATA.paths.forEach(p => {
+        const val = getDepartmentMetricValue(p.dept, currentMetric);
+        deptVals[p.dept] = val;
+        if (val > maxVal) maxVal = val;
+        if (val < minVal && val > 0) minVal = val;
+      });
+
+      if (minVal === Infinity) minVal = 0;
+
+      DASHBOARD_DATA.paths.forEach(p => {
+        const pathEl = document.getElementById('path-' + sanitizeId(p.dept));
+        if (pathEl) {
+          const val = deptVals[p.dept];
+          pathEl.style.fill = getColorForValue(val, minVal, maxVal);
+          if (selectedDept === p.dept) {
+            pathEl.classList.add('selected');
+          } else {
+            pathEl.classList.remove('selected');
+          }
+        }
+      });
+
+      const unit = currentMetric === 'capacidad_total' || currentMetric === 'promedio_mbps_enlace' ? ' Mbps' : '';
+      document.getElementById('legend-min').textContent = minVal.toLocaleString() + unit;
+      document.getElementById('legend-max').textContent = maxVal.toLocaleString() + unit;
+    }
+
+    function onDeptHover(e, deptName) {
+      const tooltip = document.getElementById('map-tooltip');
+      const deptLinks = filteredLinks.filter(l => l.DEPARTAMENTO === deptName);
+      const cap = deptLinks.reduce((acc, l) => acc + (parseInt(l['CAPACIDAD CONTRATO']) || 0), 0);
+      const munis = new Set(deptLinks.map(l => l.MUNICIPIO)).size;
+      const totalFilteredCap = filteredLinks.reduce((acc, l) => acc + (parseInt(l['CAPACIDAD CONTRATO']) || 0), 0) || 1;
+      const pct = ((cap / totalFilteredCap) * 100).toFixed(1);
+
+      tooltip.innerHTML = `
+        <div class="tooltip-header">
+          <span>${deptName}</span>
+          <span>${pct}%</span>
+        </div>
+        <div class="tooltip-row">
+          <span>Capacidad Total:</span>
+          <span>${cap.toLocaleString()} Mbps</span>
+        </div>
+        <div class="tooltip-row">
+          <span>Enlaces Activos:</span>
+          <span>${deptLinks.length}</span>
+        </div>
+        <div class="tooltip-row">
+          <span>Municipios:</span>
+          <span>${munis}</span>
+        </div>
+        <div style="margin-top:0.4rem; font-size:0.7rem; color:#94a3b8; font-style:italic;">
+          Click para filtrar departamento
+        </div>
+      `;
+      tooltip.style.display = 'block';
+      onDeptMove(e);
+    }
+
+    function onDeptMove(e) {
+      const tooltip = document.getElementById('map-tooltip');
+      const mapWrapper = document.getElementById('map-wrapper');
+      const rect = mapWrapper.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      tooltip.style.left = x + 'px';
+      tooltip.style.top = y + 'px';
+    }
+
+    function onDeptLeave() {
+      const tooltip = document.getElementById('map-tooltip');
+      tooltip.style.display = 'none';
+    }
+
+    function onDeptClick(deptName) {
+      if (selectedDept === deptName) {
+        selectedDept = null;
+      } else {
+        selectedDept = deptName;
+      }
+      updateDashboard();
+    }
+
+    function resetDepartmentSelection() {
+      selectedDept = null;
+      updateDashboard();
+    }
+
+    function setMapMetric(metric, btn) {
+      currentMetric = metric;
+      document.querySelectorAll('.controls-panel .pill-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      updateMapColors();
+    }
+
+    function applyFilters() {
+      const instFilter = document.getElementById('filter-institution').value;
+      const typeFilter = document.getElementById('filter-type').value;
+
+      filteredLinks = DASHBOARD_DATA.links.filter(l => {
+        const matchInst = !instFilter || l['SUCURSAL GENERAL'] === instFilter;
+        const matchType = !typeFilter || l['TIPO'] === typeFilter;
+        return matchInst && matchType;
+      });
+
+      updateDashboard();
+    }
+
+    function resetAllFilters() {
+      document.getElementById('filter-institution').value = '';
+      document.getElementById('filter-type').value = '';
+      document.getElementById('table-search').value = '';
+      selectedDept = null;
+      filteredLinks = [...DASHBOARD_DATA.links];
+      updateDashboard();
+    }
+
+    function updateDashboard() {
+      const activeDeptLinks = selectedDept ? filteredLinks.filter(l => l.DEPARTAMENTO === selectedDept) : filteredLinks;
+
+      const totalCap = activeDeptLinks.reduce((acc, l) => acc + (parseInt(l['CAPACIDAD CONTRATO']) || 0), 0);
+      const totalLinksCount = activeDeptLinks.length;
+      const totalMunis = new Set(activeDeptLinks.map(l => l.MUNICIPIO)).size;
+      const nationalCap = DASHBOARD_DATA.total_capacity;
+      const pct = ((totalCap / nationalCap) * 100).toFixed(1);
+
+      // Update KPIs
+      document.getElementById('kpi-total-cap').innerHTML = `${totalCap.toLocaleString()} <span class="kpi-unit">Mbps</span>`;
+      document.getElementById('kpi-total-links').innerHTML = `${totalLinksCount.toLocaleString()} <span class="kpi-unit">Enlaces</span>`;
+      document.getElementById('kpi-total-munis').innerHTML = `${totalMunis} <span class="kpi-unit">Municipios</span>`;
+      document.getElementById('kpi-sub-cap').textContent = selectedDept ? `${pct}% del total nacional` : '100% Cobertura Nacional';
+
+      // Update Sidebar Card
+      document.getElementById('selected-dept-badge').textContent = selectedDept ? selectedDept : 'Vista Nacional';
+      document.getElementById('detail-dept-name').textContent = selectedDept ? selectedDept : 'Guatemala (Consolidado)';
+      document.getElementById('detail-dept-sub').textContent = selectedDept ? 'Detalle departamental filtrado' : 'Resumen general consolidado';
+      document.getElementById('detail-cap').textContent = totalCap.toLocaleString() + ' Mbps';
+      document.getElementById('detail-links').textContent = totalLinksCount;
+      document.getElementById('detail-munis').textContent = totalMunis;
+      document.getElementById('detail-pct').textContent = pct + '%';
+
+      renderMunicipalBars(activeDeptLinks);
+      renderInstitutionBars(activeDeptLinks);
+      renderTable(activeDeptLinks);
+      updateMapColors();
+    }
+
+    function renderMunicipalBars(linksList) {
+      const container = document.getElementById('muni-bars-list');
+      container.innerHTML = '';
+
+      const muniMap = {};
+      linksList.forEach(l => {
+        muniMap[l.MUNICIPIO] = (muniMap[l.MUNICIPIO] || 0) + (parseInt(l['CAPACIDAD CONTRATO']) || 0);
+      });
+
+      const sortedMunis = Object.entries(muniMap).sort((a, b) => b[1] - a[1]);
+      document.getElementById('muni-count-badge').textContent = `${sortedMunis.length} municipios`;
+
+      const maxMuniCap = sortedMunis.length > 0 ? sortedMunis[0][1] : 1;
+
+      sortedMunis.forEach(([muni, cap]) => {
+        const item = document.createElement('div');
+        item.className = 'muni-bar-item';
+        const pctWidth = (cap / maxMuniCap) * 100;
+
+        item.innerHTML = `
+          <div class="muni-bar-label">
+            <span>${muni}</span>
+            <span>${cap.toLocaleString()} Mbps</span>
+          </div>
+          <div class="muni-bar-track">
+            <div class="muni-bar-fill" style="width: ${pctWidth}%"></div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function renderInstitutionBars(linksList) {
+      const container = document.getElementById('inst-bars-list');
+      container.innerHTML = '';
+
+      const instMap = {};
+      linksList.forEach(l => {
+        instMap[l['SUCURSAL GENERAL']] = (instMap[l['SUCURSAL GENERAL']] || 0) + (parseInt(l['CAPACIDAD CONTRATO']) || 0);
+      });
+
+      const sortedInsts = Object.entries(instMap).sort((a, b) => b[1] - a[1]).slice(0, 8);
+      const maxInstCap = sortedInsts.length > 0 ? sortedInsts[0][1] : 1;
+
+      sortedInsts.forEach(([inst, cap]) => {
+        const item = document.createElement('div');
+        item.className = 'muni-bar-item';
+        const pctWidth = (cap / maxInstCap) * 100;
+
+        item.innerHTML = `
+          <div class="muni-bar-label">
+            <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:200px;">${inst}</span>
+            <span>${cap.toLocaleString()} Mbps</span>
+          </div>
+          <div class="muni-bar-track">
+            <div class="muni-bar-fill" style="width: ${pctWidth}%; background: #10b981;"></div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function renderTable(linksList) {
+      const tbody = document.getElementById('table-body');
+      tbody.innerHTML = '';
+
+      const searchTerm = (document.getElementById('table-search').value || '').toLowerCase();
+      let tableRows = linksList;
+
+      if (searchTerm) {
+        tableRows = linksList.filter(l => {
+          return Object.values(l).some(v => String(v).toLowerCase().includes(searchTerm));
+        });
+      }
+
+      tableRows.sort((a, b) => {
+        let valA = a[sortColumn];
+        let valB = b[sortColumn];
+        if (sortColumn === 'CAPACIDAD CONTRATO' || sortColumn === 'NO.') {
+          valA = Number(valA) || 0;
+          valB = Number(valB) || 0;
+        }
+        if (valA < valB) return sortAsc ? -1 : 1;
+        if (valA > valB) return sortAsc ? 1 : -1;
+        return 0;
+      });
+
+      document.getElementById('table-count-badge').textContent = `${tableRows.length} de ${linksList.length}`;
+
+      tableRows.forEach(l => {
+        const tr = document.createElement('tr');
+        const typeClass = l.TIPO === 'CON EQUIPO' ? 'tag-con' : 'tag-sin';
+        tr.innerHTML = `
+          <td style="font-weight:600; color:var(--text-muted);">${l['NO.']}</td>
+          <td style="font-weight:700;">${l['SUCURSAL GENERAL']}</td>
+          <td><code>${l['ID'] || '—'}</code></td>
+          <td><span style="cursor:pointer; color:#0284c7; font-weight:600;" onclick="onDeptClick('${l.DEPARTAMENTO}')">${l.DEPARTAMENTO}</span></td>
+          <td>${l.MUNICIPIO}</td>
+          <td style="font-weight:800; font-family:'JetBrains Mono',monospace;">${l['CAPACIDAD CONTRATO']} Mbps</td>
+          <td><span class="tag ${typeClass}">${l.TIPO || 'N/A'}</span></td>
+          <td style="font-size:0.75rem; color:var(--text-muted); max-width:280px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${l['DIRECCION']}">${l['DIRECCION']}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function sortTable(col) {
+      if (sortColumn === col) {
+        sortAsc = !sortAsc;
+      } else {
+        sortColumn = col;
+        sortAsc = false;
+      }
+      const activeDeptLinks = selectedDept ? filteredLinks.filter(l => l.DEPARTAMENTO === selectedDept) : filteredLinks;
+      renderTable(activeDeptLinks);
+    }
+
+    function applyTableSearch() {
+      const activeDeptLinks = selectedDept ? filteredLinks.filter(l => l.DEPARTAMENTO === selectedDept) : filteredLinks;
+      renderTable(activeDeptLinks);
+    }
+
+    function toggleLabels() {
+      const show = document.getElementById('toggle-labels').checked;
+      document.getElementById('labels-group').style.display = show ? 'block' : 'none';
+    }
+
+    function toggleTheme() {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.body.removeAttribute('data-theme');
+        document.getElementById('theme-toggle-btn').textContent = '🌙 Modo Oscuro';
+      } else {
+        document.body.setAttribute('data-theme', 'dark');
+        document.getElementById('theme-toggle-btn').textContent = '☀️ Modo Claro';
+      }
+    }
+
+    function initPanZoom() {
+      const svg = document.getElementById('svg-guatemala');
+
+      svg.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const delta = e.deltaY < 0 ? 1.15 : 0.85;
+        scale = Math.min(Math.max(0.6, scale * delta), 5);
+        applyTransform();
+      });
+
+      svg.addEventListener('mousedown', (e) => {
+        if (e.target.classList.contains('dept-path')) return;
+        isDragging = true;
+        startX = e.clientX - translateX;
+        startY = e.clientY - translateY;
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        translateX = e.clientX - startX;
+        translateY = e.clientY - startY;
+        applyTransform();
+      });
+
+      window.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+    }
+
+    function zoomIn() {
+      scale = Math.min(5, scale * 1.25);
+      applyTransform();
+    }
+
+    function zoomOut() {
+      scale = Math.max(0.6, scale * 0.8);
+      applyTransform();
+    }
+
+    function resetMapZoom() {
+      scale = 1;
+      translateX = 0;
+      translateY = 0;
+      applyTransform();
+    }
+
+    function applyTransform() {
+      const viewport = document.getElementById('map-viewport');
+      viewport.setAttribute('transform', `translate(${translateX}, ${translateY}) scale(${scale})`);
+    }
+
+    function exportDataToCSV() {
+      const activeDeptLinks = selectedDept ? filteredLinks.filter(l => l.DEPARTAMENTO === selectedDept) : filteredLinks;
+      let csv = 'NO.,SUCURSAL GENERAL,ID,DEPARTAMENTO,MUNICIPIO,CAPACIDAD CONTRATO (Mbps),TIPO,DIRECCION\n';
+      activeDeptLinks.forEach(l => {
+        const row = [
+          l['NO.'],
+          `"${l['SUCURSAL GENERAL'] || ''}"`,
+          `"${l['ID'] || ''}"`,
+          `"${l['DEPARTAMENTO'] || ''}"`,
+          `"${l['MUNICIPIO'] || ''}"`,
+          l['CAPACIDAD CONTRATO'],
+          `"${l['TIPO'] || ''}"`,
+          `"${(l['DIRECCION'] || '').replace(/"/g, '""')}"`
+        ];
+        csv += row.join(',') + '\n';
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Enlaces_Internet_GUATEL_${selectedDept || 'Nacional'}_Mayo2025.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
